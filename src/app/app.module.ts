@@ -12,12 +12,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SlidesComponent } from './slides/slides.component';
+import { UploadsComponent } from './uploads/uploads.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    SlidesComponent
+    SlidesComponent,
+    UploadsComponent
   ],
   imports: [
     BrowserModule,
