@@ -1,8 +1,64 @@
+/* Page property */
+.container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Toolbar property */
+h1 {
+  margin-left: 8px;
+}
+
+.mobile .toolbar {
+  position: fixed;
+  z-index: 2;
+}
+
+/* Sidenav property */
+.sidenav-container {
+  flex: 1;
+}
+
+.mobile .sidenav-container {
+  flex: 1 0 auto;
+}
+
+/* Menu property */
+.alignment {
+  padding: 0;
+}
+
+.color {
+  background-color: #eeeeee;
+}
+
+.active {
+  background-color: #e0e0e0;
+  color: #673ab7;
+}
+
+.active:hover {
+  background-color: #e0e0e0;
+  color: #673ab7;
+}
+
+.active:focus {
+  background-color: #e0e0e0;
+  color: #673ab7;
+}
+
+/* Footer property */
 .footer {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 2;
 }
 
 .center {
@@ -12,8 +68,4 @@
 
 a {
   color: white;
-}
-
-h1 {
-  margin-left: 8px;
 }

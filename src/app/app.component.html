@@ -1,10 +1,35 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button><mat-icon>menu</mat-icon></button>
-  <h1>{{ title }}</h1>
-</mat-toolbar>
-<router-outlet></router-outlet>
-<mat-toolbar color="primary" class="footer">
-  <div class="center">
-    <span>© 2022 Copyright: <a href="https://www.uniba.it/ricerca/dipartimenti/informatica">UniBa</a></span>
-  </div>
-</mat-toolbar>
+<!-- Page -->
+<div class="container" [class.mobile]="mobileQuery.matches">
+
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    <h1>{{ title }}</h1>
+  </mat-toolbar>
+
+  <!-- Sidenav -->
+  <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+
+    <!-- Menu -->
+    <mat-sidenav #snav class="color" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-nav-list class="alignment">
+        <a mat-list-item routerLink="slides" [routerLinkActive]="['active']">Slides</a>
+        <a mat-list-item routerLink="upload" [routerLinkActive]="['active']">Upload</a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Content -->
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+
+  <!-- Footer -->
+  <mat-toolbar color="primary" class="footer">
+    <div class="center">
+      <span>© 2022 Copyright: <a href="https://www.uniba.it/ricerca/dipartimenti/informatica">UniBa</a></span>
+    </div>
+  </mat-toolbar>
+
+</div>
