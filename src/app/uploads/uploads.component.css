@@ -1,3 +1,8 @@
+main {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
 /* File Uploader */
 .dropzone {
   max-width: 450px;
@@ -8,8 +13,6 @@
   border: dashed 1px #979797;
   position: relative;
   margin: 1.5rem auto;
-  margin-right: 5px;
-  margin-left: 5px;
 }
 
 input {
@@ -92,8 +95,6 @@ h3 {
 .files-list {
   max-width: 516.5px;
   margin: 0 auto;
-  margin-right: 5px;
-  margin-left: 5px;
 }
 
 .single-file {
