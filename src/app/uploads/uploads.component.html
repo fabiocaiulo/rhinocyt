@@ -1,11 +1,12 @@
 <main>
   <!-- File Uploader -->
   <div class="dropzone" appUploads (fileDropped)="onFileDropped($event)">
-    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)">
+    <input type="file" accept="image/jpeg, image/jpg, image/png" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)">
     <img src="assets/upload.svg">
     <h3>Drag and drop file here</h3>
     <h3>or</h3>
     <label for="fileDropRef">Browse for file</label>
+    <p>The accepted formats are jpg and png.</p>
   </div>
 
   <!-- File Uploaded -->

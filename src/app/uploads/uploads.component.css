@@ -25,6 +25,12 @@ input {
   left: 0;
 }
 
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #38424c;
+}
+
 label {
   color: white;
   width: 183px;
@@ -34,9 +40,10 @@ label {
   padding: 8px 16px;
 }
 
-h3 {
-  font-size: 20px;
-  font-weight: 600;
+p {
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 200;
   color: #38424c;
 }
 

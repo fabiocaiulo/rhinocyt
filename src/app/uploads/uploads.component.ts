@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-uploads',
@@ -9,7 +10,7 @@ export class UploadsComponent implements OnInit {
 
   files: any[];
 
-  constructor() {
+  constructor(private _snackBar: MatSnackBar) {
     this.files = [];
   }
 
@@ -65,7 +66,15 @@ export class UploadsComponent implements OnInit {
   prepareFilesList(files: Array<any>): void {
     for(const item of files) {
       item.progress = 0;
-      this.files.push(item);
+      if(item.name.endsWith('jpeg') || item.name.endsWith('jpg') || item.name.endsWith('png')) {
+        this.files.push(item);
+      } else {
+        this._snackBar.open(item.name + " is an invalid file", "OK", {
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          duration: 5000
+        });
+      }
     }
     this.uploadFilesSimulator(0);
   }

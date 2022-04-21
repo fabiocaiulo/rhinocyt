@@ -13,8 +13,8 @@
     <!-- Menu -->
     <mat-sidenav #snav class="color" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-nav-list class="alignment">
-        <a mat-list-item routerLink="slides" [routerLinkActive]="['active']">Slides</a>
-        <a mat-list-item routerLink="uploads" [routerLinkActive]="['active']">Uploads</a>
+        <a mat-list-item routerLink="slides" [routerLinkActive]="['active']"><mat-icon>dashboard</mat-icon>Slides</a>
+        <a mat-list-item routerLink="uploads" [routerLinkActive]="['active']"><mat-icon>image</mat-icon>Uploads</a>
       </mat-nav-list>
     </mat-sidenav>
 
