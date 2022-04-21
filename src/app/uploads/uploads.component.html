@@ -1,1 +1,23 @@
-<p>uploads works!</p>
+<!-- File Uploader -->
+<div class="dropzone" appUploads (fileDropped)="onFileDropped($event)">
+  <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)">
+  <img src="assets/upload.svg">
+  <h3>Drag and drop file here</h3>
+  <h3>or</h3>
+  <label for="fileDropRef">Browse for file</label>
+</div>
+
+<!-- File Uploaded -->
+<div class="files-list">
+  <div class="single-file" *ngFor="let file of files; let i = index">
+    <img src="assets/file.svg" width="45px">
+    <div class="info">
+      <h4 class="name">{{ file?.name }}</h4>
+      <p class="size">{{ formatBytes(file?.size, 0) }}</p>
+      <div class="progress-cont">
+        <div class="progress" [style.width]="file.progress + '%'"></div>
+      </div>
+    </div>
+    <img src="assets/delete.svg" class="delete" width="20px" (click)="deleteFile(i)">
+  </div>
+</div>

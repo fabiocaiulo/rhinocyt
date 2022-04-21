@@ -13,13 +13,15 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SlidesComponent } from './slides/slides.component';
 import { UploadsComponent } from './uploads/uploads.component';
+import { UploadsDirective } from './uploads.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     PageNotFoundComponent,
     SlidesComponent,
-    UploadsComponent
+    UploadsComponent,
+    UploadsDirective
   ],
   imports: [
     BrowserModule,
