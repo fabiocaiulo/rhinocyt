@@ -1,4 +1,4 @@
-/* Page property */
+/* Page */
 .container {
   display: flex;
   flex-direction: column;
@@ -9,7 +9,7 @@
   right: 0;
 }
 
-/* Toolbar property */
+/* Toolbar */
 h1 {
   margin-left: 8px;
 }
@@ -19,7 +19,7 @@ h1 {
   z-index: 2;
 }
 
-/* Sidenav property */
+/* Sidenav */
 .sidenav-container {
   flex: 1;
 }
@@ -28,7 +28,7 @@ h1 {
   flex: 1 0 auto;
 }
 
-/* Menu property */
+/* Menu */
 .alignment {
   padding: 0;
 }
@@ -52,7 +52,7 @@ h1 {
   color: #673ab7;
 }
 
-/* Footer property */
+/* Footer */
 .footer {
   z-index: 2;
 }

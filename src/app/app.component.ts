@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import {MediaMatcher} from '@angular/cdk/layout';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +7,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
   title: string = 'Rhinocyt';
   mobileQuery: MediaQueryList;
 
@@ -21,4 +22,5 @@ export class AppComponent {
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
+
 }
