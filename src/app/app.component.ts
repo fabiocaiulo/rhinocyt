@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 
+// Make the App Responsive
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,12 +9,12 @@ import { MediaMatcher } from '@angular/cdk/layout';
 })
 export class AppComponent {
 
-  title: string = 'Rhinocyt';
+  title: string;
   mobileQuery: MediaQueryList;
-
   private _mobileQueryListener: () => void;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+    this.title = 'Rhinocyt';
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);

@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { Subscription } from 'rxjs/internal/Subscription';
+import { SlideService } from '../slide.service';
 
 @Component({
   selector: 'app-uploads',
   templateUrl: './uploads.component.html',
   styleUrls: ['./uploads.component.css']
 })
-export class UploadsComponent implements OnInit {
+export class UploadsComponent implements OnDestroy {
 
+  @ViewChild("fileDropRef", { static: false }) fileDropEl: ElementRef = {} as ElementRef;
   files: any[];
+  private subscriptions: Subscription[];
 
-  constructor(private _snackBar: MatSnackBar) {
+  constructor(private slideService: SlideService, private _snackBar: MatSnackBar) {
     this.files = [];
+    this.subscriptions = [];
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe);
   }
 
   onFileDropped(event: any): void {
@@ -23,8 +30,8 @@ export class UploadsComponent implements OnInit {
 
   fileBrowseHandler(event: any): void {
     this.prepareFilesList(event.target.files);
+    console.log(event.target.files);
   }
-
 
   /**
    * Delete file from files list
@@ -49,9 +56,9 @@ export class UploadsComponent implements OnInit {
           } else {
             this.files[index].progress += 5;
           }
-        }, 100);
+        }, 200);
       }
-    }, 100);
+    }, 1000);
   }
 
   /**
@@ -59,14 +66,14 @@ export class UploadsComponent implements OnInit {
    * @param files (files list)
    */
   prepareFilesList(files: Array<any>): void {
-    //const prefix = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.originalname.split('.').pop();
     for(const file of files) {
-      this.uploadFilesSimulator(0);
       file.progress = 0;
       const name = file.name.toLowerCase();
       if(name.endsWith('jpeg') || name.endsWith('jpg') || name.endsWith('png')) {
+        console.log(file);
+        file.id = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.name.split('.').pop();
         this.files.push(file);
-        file.progress = 100;
+        this.slideService.createSlide(file, file.id);
       } else {
         this._snackBar.open(file.name + " is an invalid file", "OK, GOT IT", {
           horizontalPosition: 'center',
@@ -74,6 +81,8 @@ export class UploadsComponent implements OnInit {
           duration: 5000
         });
       }
+    this.fileDropEl.nativeElement.value = "";
+    this.uploadFilesSimulator(0);
     }
   }
 
