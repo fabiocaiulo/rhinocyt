@@ -31,12 +31,12 @@ const storage = multer.diskStorage({
     cb(null, './files')
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.originalname.split('.').pop())
+    cb(null, file.originalname)
   }
 })
 const upload = multer({ storage: storage })
 
-app.post('/api/slides/create', upload.single('slide'), async (req, res) => {
+app.post('/api/slides/create', upload.single('image'), async (req, res) => {
   try {
     const file = req.file
     const destination = 'slides/' + file.filename

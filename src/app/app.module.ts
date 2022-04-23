@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,6 +34,7 @@ import { UploadsDirective } from './uploads.directive';
     MatSidenavModule,
     MatListModule,
     MatSnackBarModule,
+    MatProgressBarModule,
     AppRoutingModule
   ],
   providers: [],

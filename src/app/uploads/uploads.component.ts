@@ -17,19 +17,14 @@ export class UploadsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  /**
-   * On file drop handler
-   */
-  onFileDropped(event: any) {
+  onFileDropped(event: any): void {
     this.prepareFilesList(event);
   }
 
-  /**
-   * Handle file from browsing
-   */
-  fileBrowseHandler(event: any) {
+  fileBrowseHandler(event: any): void {
     this.prepareFilesList(event.target.files);
   }
+
 
   /**
    * Delete file from files list
@@ -54,9 +49,9 @@ export class UploadsComponent implements OnInit {
           } else {
             this.files[index].progress += 5;
           }
-        }, 200);
+        }, 100);
       }
-    }, 1000);
+    }, 100);
   }
 
   /**
@@ -64,19 +59,22 @@ export class UploadsComponent implements OnInit {
    * @param files (files list)
    */
   prepareFilesList(files: Array<any>): void {
-    for(const item of files) {
-      item.progress = 0;
-      if(item.name.endsWith('jpeg') || item.name.endsWith('jpg') || item.name.endsWith('png')) {
-        this.files.push(item);
+    //const prefix = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.originalname.split('.').pop();
+    for(const file of files) {
+      this.uploadFilesSimulator(0);
+      file.progress = 0;
+      const name = file.name.toLowerCase();
+      if(name.endsWith('jpeg') || name.endsWith('jpg') || name.endsWith('png')) {
+        this.files.push(file);
+        file.progress = 100;
       } else {
-        this._snackBar.open(item.name + " is an invalid file", "OK", {
+        this._snackBar.open(file.name + " is an invalid file", "OK, GOT IT", {
           horizontalPosition: 'center',
           verticalPosition: 'top',
           duration: 5000
         });
       }
     }
-    this.uploadFilesSimulator(0);
   }
 
   /**
