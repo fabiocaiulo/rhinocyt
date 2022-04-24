@@ -2,10 +2,12 @@
 <div class="container" [class.mobile]="mobileQuery.matches">
 
   <!-- Toolbar -->
-  <mat-toolbar color="primary" class="toolbar">
-    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
-    <h1>{{ title }}</h1>
-  </mat-toolbar>
+  <header>
+    <mat-toolbar color="primary" class="toolbar">
+      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      <h1>{{ title }}</h1>
+    </mat-toolbar>
+  </header>
 
   <!-- Sidenav -->
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -26,7 +28,7 @@
   </mat-sidenav-container>
 
   <!-- Footer -->
-  <footer class="footer">
+  <footer>
     <mat-toolbar color="primary">
       <div class="center">
         <span>© 2022 Copyright: <a href="https://www.uniba.it/ricerca/dipartimenti/informatica">UniBa</a></span>

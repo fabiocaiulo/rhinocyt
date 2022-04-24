@@ -13,10 +13,15 @@ export class UploadsComponent implements OnDestroy {
 
   @ViewChild('fileDropRef', { static: false }) private fileDropRef: ElementRef = {} as ElementRef;
   files: any[];
+  imageModal: string;
+  image: any;
+  name: string;
   private subscriptions: Subscription[];
 
   constructor(private slideService: SlideService, private feedbackService: FeedbackService) {
     this.files = [];
+    this.name = '';
+    this.imageModal = 'none';
     this.subscriptions = [];
   }
 
@@ -41,8 +46,8 @@ export class UploadsComponent implements OnDestroy {
         (file as any).id = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.name.split('.').pop();
         (file as any).progress = 0;
         if(this.uploadFile(file)) {
-          this.files.push(file);
           this.showProgress(file);
+          this.files.push(file);
         }
       }
     }
@@ -78,6 +83,20 @@ export class UploadsComponent implements OnDestroy {
         if((file as any).progress < 100) (file as any).progress += 5;
       }, 100);
     }, 500);
+  }
+
+  // Show Image previously Uploaded
+  showImage(index: number): void {
+    const reader = new FileReader();
+    reader.readAsDataURL(this.files[index]);
+    reader.onload = () => this.image = reader.result;
+    this.name = this.files[index].name;
+    this.imageModal = 'block';
+  }
+
+  // Close Modal previously Showed
+  closeModal(): void {
+    this.imageModal = 'none';
   }
 
   // Remove File previously Uploaded

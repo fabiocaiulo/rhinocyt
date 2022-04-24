@@ -3,7 +3,7 @@
 
   <!-- File Uploader -->
   <div class="dropzone" appUploads (fileDropped)="onFileDropped($event)">
-    <input type="file" accept="image/jpeg, image/jpg, image/png" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)">
+    <input #fileDropRef multiple type="file" accept="image/jpeg, image/jpg, image/png" (change)="fileBrowseHandler($event)">
     <img src="assets/upload.svg">
     <h3>Drag and drop slide here</h3>
     <h3>or</h3>
@@ -14,7 +14,7 @@
   <!-- File Uploaded -->
   <div class="files-list">
     <div class="single-file" *ngFor="let file of files; let i = index">
-      <img src="assets/file.svg" width="45px">
+      <img src="assets/file.svg" class="file" width="45px" (click)="showImage(i)">
       <div class="info">
         <h4 class="name">{{ file?.name }}</h4>
         <p class="size">{{ formatBytes(file?.size, 2) }}</p>
@@ -27,3 +27,10 @@
   </div>
 
 </main>
+
+<!-- Image Preview -->
+<div class="modal" [style.display]="imageModal">
+  <span class="close" (click)="closeModal()">&times;</span>
+  <img class="modal-content" [src]="image">
+  <div id="caption">{{ name }}</div>
+</div>

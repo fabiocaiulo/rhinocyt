@@ -10,6 +10,10 @@
 }
 
 /* Toolbar */
+header {
+  z-index: 2;
+}
+
 h1 {
   margin-left: 8px;
 }
@@ -53,7 +57,7 @@ h1 {
 }
 
 /* Footer */
-.footer {
+footer {
   z-index: 2;
 }
 
