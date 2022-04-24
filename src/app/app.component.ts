@@ -11,7 +11,7 @@ export class AppComponent {
 
   title: string;
   mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+  private _mobileQueryListener;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.title = 'Rhinocyt';

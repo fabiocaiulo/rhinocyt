@@ -1,3 +1,4 @@
+// Slide Type
 export interface Slide {
   id: string;
   date: Date;

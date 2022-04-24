@@ -39,30 +39,31 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-// POST: Create Slide API
-app.post('/api/slides/create', upload.single('image'), async (req, res) => {
+// POST: Upload Slide API
+app.post('/api/slides/upload', upload.single('image'), async (req, res) => {
   try {
     const image = req.file
-    await bucket.upload(image.path, {destination: image.filename})
+    const destination = 'slides/' + image.filename
+    await bucket.upload(image.path, { destination: destination })
     await unlinkAsync(image.path)
-    await Slide.add({ image: image.filename })
-    res.status(200).send({ msg: 'Created' })
+    await Slide.add({ image: destination, date: new Date() })
+    res.status(200).send({ msg: 'Uploaded' })
   } catch(error) {
-    console.log('Create Slide API: ' + error.message)
+    console.log('Upload Slide API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })
 
-// DELETE: Delete Slide API
-app.delete('/api/slides/delete', async (req, res) => {
+// DELETE: Remove Slide API
+app.delete('/api/slides/remove', async (req, res) => {
   try {
-    const image = req.query.id
+    const image = 'slides/' + req.query.id
     const slide = await Slide.where('image', '==', image).get()
     slide.docs.map((doc) => (Slide.doc(doc.id).delete()))
     await bucket.file(image).delete()
-    res.status(200).send({ msg: 'Deleted' })
+    res.status(200).send({ msg: 'Removed' })
   } catch (error) {
-    console.log('Delete Slide API: ' + error.message)
+    console.log('Remove Slide API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })

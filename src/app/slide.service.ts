@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Slide } from './slide';
 import { Observable, tap, catchError, of } from 'rxjs';
+
+import { FeedbackService } from './feedback.service';
+import { Response } from './response';
 
 @Injectable({
   providedIn: 'root'
@@ -22,24 +23,26 @@ export class SlideService {
   };
 
   // Use Http Requests
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar) { }
+  constructor(
+    private http: HttpClient,
+    private feedbackService: FeedbackService
+  ) { }
 
-  // POST: Create a new Slide to the Server
-  createSlide(image: File, id: string): void {
-    const url = this.slidesUrl + 'create';
+  // POST: Upload a new Slide to the Server
+  uploadSlide(image: File, id: string): Observable<Response> {
+    const url = this.slidesUrl + 'upload';
     let formData = new FormData();
     formData.append('image', image, id);
-    this.http.post(url, formData).pipe(
-      tap(_ => console.log('display snackbar')),
-      catchError(this.handleError<any>('createSlide'))
+    return this.http.post<Response>(url, formData).pipe(
+      catchError(this.handleError<Response>('upload ' + image.name))
     );
   }
 
-  // DELETE: Delete the Slide from the Server
-  deleteSlide(id: string): Observable<any> {
-    const url = this.slidesUrl + 'delete?id=' + id;
-    return this.http.delete(url, this.httpOptions).pipe(
-      catchError(this.handleError<any>('deleteSlide'))
+  // DELETE: Remove the Slide from the Server
+  removeSlide(image: File, id: string): Observable<Response> {
+    const url = this.slidesUrl + 'remove?id=' + id;
+    return this.http.delete<Response>(url, this.httpOptions).pipe(
+      catchError(this.handleError<Response>('remove ' + image.name))
     );
   }
 
@@ -53,6 +56,7 @@ export class SlideService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: Error): Observable<T> => {
       console.log(operation + ' failed: ' + error.message);
+      this.feedbackService.showBottomFeedback('An error occured when trying to ' + operation);
       return of(result as T);
     }
   }

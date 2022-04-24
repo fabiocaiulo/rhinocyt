@@ -1,4 +1,6 @@
+<!-- Container -->
 <main>
+
   <!-- File Uploader -->
   <div class="dropzone" appUploads (fileDropped)="onFileDropped($event)">
     <input type="file" accept="image/jpeg, image/jpg, image/png" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)">
@@ -15,12 +17,13 @@
       <img src="assets/file.svg" width="45px">
       <div class="info">
         <h4 class="name">{{ file?.name }}</h4>
-        <p class="size">{{ formatBytes(file?.size, 0) }}</p>
+        <p class="size">{{ formatBytes(file?.size, 2) }}</p>
         <div class="progress-cont">
           <div class="progress" [style.width]="file.progress + '%'"></div>
         </div>
       </div>
-      <img src="assets/delete.svg" class="delete" width="20px" (click)="deleteFile(i)">
+      <img src="assets/delete.svg" class="delete" width="20px" (click)="removeFile(i)">
     </div>
   </div>
+
 </main>

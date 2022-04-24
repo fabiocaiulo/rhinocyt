@@ -5,6 +5,7 @@ import { SlidesComponent } from './slides/slides.component';
 import { UploadsComponent } from './uploads/uploads.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
+// Application Routes
 const routes: Routes = [
   { path: '', redirectTo: 'slides', pathMatch: 'full'},
   { path: 'slides', component: SlidesComponent },

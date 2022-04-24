@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { SlideService } from '../slide.service';
+
+import { SlideService } from './../slide.service';
+import { FeedbackService } from '../feedback.service';
 
 @Component({
   selector: 'app-uploads',
@@ -11,11 +11,11 @@ import { SlideService } from '../slide.service';
 })
 export class UploadsComponent implements OnDestroy {
 
-  @ViewChild("fileDropRef", { static: false }) fileDropEl: ElementRef = {} as ElementRef;
+  @ViewChild('fileDropRef', { static: false }) private fileDropRef: ElementRef = {} as ElementRef;
   files: any[];
   private subscriptions: Subscription[];
 
-  constructor(private slideService: SlideService, private _snackBar: MatSnackBar) {
+  constructor(private slideService: SlideService, private feedbackService: FeedbackService) {
     this.files = [];
     this.subscriptions = [];
   }
@@ -24,85 +24,87 @@ export class UploadsComponent implements OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe);
   }
 
-  onFileDropped(event: any): void {
-    this.prepareFilesList(event);
+  // On File Drop handler
+  onFileDropped(files: File) {
+    this.prepareFilesList(files as any);
   }
 
-  fileBrowseHandler(event: any): void {
-    this.prepareFilesList(event.target.files);
-    console.log(event.target.files);
+  // Handle File from Browsing
+  fileBrowseHandler(event: Event) {
+    this.prepareFilesList((event as any).target.files);
   }
 
-  /**
-   * Delete file from files list
-   * @param index (file index)
-   */
-  deleteFile(index: number) {
-    this.files.splice(index, 1);
-  }
-
-  /**
-   * Simulate the upload process
-   */
-  uploadFilesSimulator(index: number) {
-    setTimeout(() => {
-      if (index === this.files.length) {
-        return;
-      } else {
-        const progressInterval = setInterval(() => {
-          if (this.files[index].progress === 100) {
-            clearInterval(progressInterval);
-            this.uploadFilesSimulator(index + 1);
-          } else {
-            this.files[index].progress += 5;
-          }
-        }, 200);
-      }
-    }, 1000);
-  }
-
-  /**
-   * Convert files list to normal array list
-   * @param files (files list)
-   */
-  prepareFilesList(files: Array<any>): void {
+  // Convert Files List to Array List
+  private prepareFilesList(files: Array<File>): void {
     for(const file of files) {
-      file.progress = 0;
-      const name = file.name.toLowerCase();
-      if(name.endsWith('jpeg') || name.endsWith('jpg') || name.endsWith('png')) {
-        console.log(file);
-        file.id = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.name.split('.').pop();
-        this.files.push(file);
-        this.slideService.createSlide(file, file.id);
-      } else {
-        this._snackBar.open(file.name + " is an invalid file", "OK, GOT IT", {
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          duration: 5000
-        });
+      if(this.checkFile(file)) {
+        (file as any).id = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.name.split('.').pop();
+        (file as any).progress = 0;
+        if(this.uploadFile(file)) {
+          this.files.push(file);
+          this.showProgress(file);
+        }
       }
-    this.fileDropEl.nativeElement.value = "";
-    this.uploadFilesSimulator(0);
     }
+    this.fileDropRef.nativeElement.value = '';
+  }
+
+  // Check that the File is an Image
+  private checkFile(file: File): boolean {
+    let image = true;
+    const name = file.name.toLowerCase();
+    if(!name.endsWith('jpeg') && !name.endsWith('jpg') && !name.endsWith('png')) {
+      image = false;
+      this.feedbackService.showTopFeedback(file.name + ' is an invalid file');
+    }
+    return image;
+  }
+
+  // Upload File on Remote Server
+  private uploadFile(file: File): boolean {
+    let upload = true;
+    this.subscriptions.push(
+      this.slideService.uploadSlide(file, (file as any).id).subscribe(res => {
+        if(res.msg.toLowerCase() === 'error') upload = false;
+      })
+    );
+    return upload;
+  }
+
+  // Show Upload file Progress
+  private showProgress(file: File): void {
+    setTimeout(() => {
+      setInterval(() => {
+        if((file as any).progress < 100) (file as any).progress += 5;
+      }, 100);
+    }, 500);
+  }
+
+  // Remove File previously Uploaded
+  removeFile(index: number): void {
+    this.slideService.removeSlide(this.files[index], this.files[index].id).subscribe(res => {
+      if(res.msg.toLowerCase() !== 'error') this.files.splice(index, 1);
+    })
   }
 
   /**
-   * Format bytes
-   * @param bytes (file size in bytes)
-   * @param decimals (decimals point)
+   * Format Bytes
+   *
+   * @param bytes - file size in bytes
+   * @param decimals - decimals point
    */
-   formatBytes(bytes: number, decimals: number): string {
-    let result = '';
-    if (bytes === 0) {
-      result = '0 Bytes';
-    } else {
+  formatBytes(bytes: number, decimals: number): string {
+    let conversion = '';
+    if(bytes !== 0) {
       const k = 1024;
       const dm = decimals <= 0 ? 0 : decimals || 2;
       const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
-      result = parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+      conversion = parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    } else {
+      conversion = '0 Bytes';
     }
-    return result;
+    return conversion;
   }
 
 }
