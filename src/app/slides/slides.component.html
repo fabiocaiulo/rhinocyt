@@ -1,1 +1,33 @@
-<p>slides works!</p>
+<!-- Slides Card -->
+<ng-container *ngIf="slides.length > 0; else elseTemplate">
+  <mat-grid-list [class.card]="mobileQuery.matches" [cols]="mobileQuery.matches ? 1 : laptopQuery.matches ? 2 : 3" [rowHeight]="mobileQuery.matches ? '425px' : '1:1'">
+    <mat-grid-tile *ngFor="let slide of slides">
+      <mat-card class="mat-elevation-z3">
+        <img class="card-img" [src]="slide.image">
+        <mat-card-content>
+          <p>Last change on {{ slide.date | date: 'EEEE, d MMMM y' }} at {{ slide.date | date: 'H:mm:ss' }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary">Analyze</button>
+          <button mat-button color="primary">See</button>
+          <button mat-icon-button color="primary" class="delete"><mat-icon>delete_outline</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <mat-paginator class="paginator" [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</ng-container>
+
+<!-- No Slides -->
+<ng-template #elseTemplate>
+  <main>
+    <div class="wrapper">
+      <img src="../../assets/noslidesfound.png" class="img">
+      <div>
+        <h1>No Slides Found</h1>
+        <p>There isn't even a slide. Upload slides to start analyzing them.</p>
+        <a mat-raised-button color="primary" routerLink="/uploads">Upload Slides</a>
+      </div>
+    </div>
+  </main>
+</ng-template>

@@ -5,6 +5,7 @@ import { Observable, tap, catchError, of } from 'rxjs';
 
 import { FeedbackService } from './feedback.service';
 import { Response } from './response';
+import { Slide } from './slide';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,14 @@ export class SlideService {
     const url = this.slidesUrl + 'remove?id=' + id;
     return this.http.delete<Response>(url, this.httpOptions).pipe(
       catchError(this.handleError<Response>('remove ' + image.name))
+    );
+  }
+
+  // GET: Read the Slides from the Server
+  readSlides(): Observable<Slide[]> {
+    const url = this.slidesUrl + 'read';
+    return this.http.get<Slide[]>(url).pipe(
+      catchError(this.handleError<Slide[]>('read slides'))
     );
   }
 

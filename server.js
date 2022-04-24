@@ -46,7 +46,12 @@ app.post('/api/slides/upload', upload.single('image'), async (req, res) => {
     const destination = 'slides/' + image.filename
     await bucket.upload(image.path, { destination: destination })
     await unlinkAsync(image.path)
-    await Slide.add({ image: destination, date: new Date() })
+    await Slide.add({
+      visible: true,
+      date: new Date().toDateString() + ' ' + new Date().toTimeString(),
+      image: bucket.file(destination).publicUrl(),
+      annotations: ['']
+    })
     res.status(200).send({ msg: 'Uploaded' })
   } catch(error) {
     console.log('Upload Slide API: ' + error.message)
@@ -58,12 +63,24 @@ app.post('/api/slides/upload', upload.single('image'), async (req, res) => {
 app.delete('/api/slides/remove', async (req, res) => {
   try {
     const image = 'slides/' + req.query.id
-    const slide = await Slide.where('image', '==', image).get()
+    const url = 'https://storage.googleapis.com/rhinocytology.appspot.com/slides%2F' + req.query.id
+    const slide = await Slide.where('image', '==', url).get()
     slide.docs.map((doc) => (Slide.doc(doc.id).delete()))
     await bucket.file(image).delete()
     res.status(200).send({ msg: 'Removed' })
-  } catch (error) {
+  } catch(error) {
     console.log('Remove Slide API: ' + error.message)
+    res.status(400).send({ msg: 'Error' })
+  }
+})
+
+// GET: Read Slide API
+app.get('/api/slides/read', async (req, res) => {
+  try {
+    const snapshot = await Slide.where('visible', '==', true).orderBy('date', 'desc').get()
+    res.status(200).send(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+  } catch(error) {
+    console.log('Read Slide API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })
