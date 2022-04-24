@@ -45,10 +45,7 @@ export class UploadsComponent implements OnDestroy {
       if(this.checkFile(file)) {
         (file as any).id = Date.now() + '_' + Math.round(Math.random() * 1E9) + '.' + file.name.split('.').pop();
         (file as any).progress = 0;
-        if(this.uploadFile(file)) {
-          this.showProgress(file);
-          this.files.push(file);
-        }
+        this.uploadFile(file);
       }
     }
     this.fileDropRef.nativeElement.value = '';
@@ -66,14 +63,15 @@ export class UploadsComponent implements OnDestroy {
   }
 
   // Upload File on Remote Server
-  private uploadFile(file: File): boolean {
-    let upload = true;
+  private uploadFile(file: File): void {
     this.subscriptions.push(
       this.slideService.uploadSlide(file, (file as any).id).subscribe(res => {
-        if(res.msg.toLowerCase() === 'error') upload = false;
+        if(res.msg.toLowerCase() !== 'error') {
+          this.showProgress(file);
+          this.files.push(file);
+        }
       })
     );
-    return upload;
   }
 
   // Show Upload file Progress
