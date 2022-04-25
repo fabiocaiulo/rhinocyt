@@ -14,7 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +22,7 @@ import { SlidesComponent } from './slides/slides.component';
 import { UploadsComponent } from './uploads/uploads.component';
 import { UploadsDirective } from './uploads.directive';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DialogComponent } from './dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     SlidesComponent,
     UploadsComponent,
     UploadsDirective,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +47,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     MatButtonModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatProgressBarModule,
+    MatDialogModule,
     AppRoutingModule,
     HttpClientModule
   ],

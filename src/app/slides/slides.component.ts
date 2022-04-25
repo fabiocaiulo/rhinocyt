@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef 
 import { MediaMatcher } from '@angular/cdk/layout';
 
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
 import { SlideService } from '../slide.service';
 import { Slide } from '../slide';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-slides',
@@ -28,7 +30,7 @@ export class SlidesComponent implements OnInit, OnDestroy {
   private _laptopQueryListener = () => {};
   private _desktopQueryListener = () => {};
 
-  constructor(private slideService: SlideService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+  constructor(private slideService: SlideService, private dialog: MatDialog, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.values = true;
     this.items = [];
     this.slides = [];
@@ -104,6 +106,20 @@ export class SlidesComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  // Show Confirmation Dialog
+  showDialog(id: string, index: number) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Delete this slide?',
+        content: 'This will delete this element that are currently on this page and cannot be undone.',
+        action: 'Delete'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) this.deleteSlide(id, index)
+    });
   }
 
   // Hide the Slide from Server
