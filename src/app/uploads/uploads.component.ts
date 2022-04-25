@@ -57,7 +57,7 @@ export class UploadsComponent implements OnDestroy {
     const name = file.name.toLowerCase();
     if(!name.endsWith('jpeg') && !name.endsWith('jpg') && !name.endsWith('png')) {
       image = false;
-      this.feedbackService.showTopFeedback(file.name + ' is an invalid file');
+      this.feedbackService.showFeedback(file.name + ' is an invalid file', 'OK, GOT IT');
     }
     return image;
   }

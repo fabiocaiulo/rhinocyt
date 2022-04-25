@@ -1,6 +1,6 @@
 <!-- Slides Card -->
 <ng-container *ngIf="slides.length > 0; else elseTemplate">
-  <mat-grid-list [class.card]="mobileQuery.matches" [cols]="mobileQuery.matches ? 1 : laptopQuery.matches ? 2 : 3" [rowHeight]="mobileQuery.matches ? '425px' : '1:1'">
+  <mat-grid-list [class.list]="mobileQuery.matches" [cols]="mobileQuery.matches ? 1 : laptopQuery.matches ? 2 : desktopQuery.matches ? 3 : 4" [rowHeight]="mobileQuery.matches ? '425px' : laptopQuery.matches ? '450px' : desktopQuery.matches ? '475px' : '500px'">
     <mat-grid-tile *ngFor="let slide of slides">
       <mat-card class="mat-elevation-z3">
         <img class="card-img" [src]="slide.image">

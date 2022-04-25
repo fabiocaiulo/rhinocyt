@@ -13,20 +13,25 @@ import { Slide } from '../slide';
 export class SlidesComponent implements OnInit, OnDestroy {
 
   slides: Slide[];
-  laptopQuery: MediaQueryList;
   mobileQuery: MediaQueryList;
-  private _laptopQueryListener;
+  laptopQuery: MediaQueryList;
+  desktopQuery: MediaQueryList;
   private _mobileQueryListener;
+  private _laptopQueryListener;
+  private _desktopQueryListener;
   private subscriptions: Subscription[];
 
   constructor(private slideService: SlideService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.slides = [];
-    this.laptopQuery = media.matchMedia('(max-width: 1300px)');
     this.mobileQuery = media.matchMedia('(max-width: 1000px)');
-    this._laptopQueryListener = () => changeDetectorRef.detectChanges();
+    this.laptopQuery = media.matchMedia('(max-width: 1450px)');
+    this.desktopQuery = media.matchMedia('(max-width: 1900px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.laptopQuery.addListener(this._laptopQueryListener);
+    this._laptopQueryListener = () => changeDetectorRef.detectChanges();
+    this._desktopQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
+    this.laptopQuery.addListener(this._laptopQueryListener);
+    this.desktopQuery.addListener(this._desktopQueryListener);
     this.subscriptions = [];
   }
 
@@ -35,8 +40,9 @@ export class SlidesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.laptopQuery.removeListener(this._laptopQueryListener);
     this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.laptopQuery.removeListener(this._laptopQueryListener);
+    this.desktopQuery.removeListener(this._desktopQueryListener);
     this.subscriptions.forEach(sub => sub.unsubscribe);
   }
 

@@ -65,7 +65,7 @@ export class SlideService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: Error): Observable<T> => {
       console.log(operation + ' failed: ' + error.message);
-      this.feedbackService.showBottomFeedback('An error occured when trying to ' + operation);
+      this.feedbackService.showFeedback('An error occured when trying to ' + operation, 'OK, GOT IT');
       return of(result as T);
     }
   }
