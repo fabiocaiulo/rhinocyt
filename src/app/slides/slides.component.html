@@ -1,21 +1,21 @@
 <!-- Slides Card -->
-<ng-container *ngIf="slides.length > 0; else elseTemplate">
-  <mat-grid-list [class.list]="mobileQuery.matches" [cols]="mobileQuery.matches ? 1 : laptopQuery.matches ? 2 : desktopQuery.matches ? 3 : 4" [rowHeight]="mobileQuery.matches ? '425px' : laptopQuery.matches ? '450px' : desktopQuery.matches ? '475px' : '500px'">
-    <mat-grid-tile *ngFor="let slide of slides">
+<ng-container *ngIf="values; else elseTemplate">
+  <mat-grid-list [class.mobileList]="mobileQuery.matches" [cols]="getCols()" [rowHeight]="mobileQuery.matches ? '425px' : laptopQuery.matches ? '450px' : desktopQuery.matches ? '475px' : '500px'">
+    <mat-grid-tile *ngFor="let item of items">
       <mat-card class="mat-elevation-z3">
-        <img class="card-img" [src]="slide.image">
+        <img class="card-img" [src]="item.image">
         <mat-card-content>
-          <p>Last change on {{ slide.date | date: 'EEEE, d MMMM y' }} at {{ slide.date | date: 'H:mm:ss' }}</p>
+          <p>Last change on {{ item.date | date: 'EEEE, d MMMM y' }} at {{ item.date | date: 'H:mm:ss' }}</p>
         </mat-card-content>
         <mat-card-actions>
           <button mat-button color="primary">Analyze</button>
           <button mat-button color="primary">See</button>
-          <button mat-icon-button color="primary" class="delete"><mat-icon>delete_outline</mat-icon></button>
+          <button mat-icon-button matTooltip="Delete" color="primary" class="delete"><mat-icon>delete_outline</mat-icon></button>
         </mat-card-actions>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
-  <mat-paginator class="paginator" [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  <mat-paginator *ngIf="slides.length > 0" [class.paginator]="items.length <= getCols()" [length]="slides.length" [pageSize]="2*getCols()" [pageSizeOptions]="[1*getCols(), 2*getCols(), 5*getCols(), 20*getCols()]" (page)="changeItems($event)"></mat-paginator>
 </ng-container>
 
 <!-- No Slides -->

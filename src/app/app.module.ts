@@ -11,6 +11,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
@@ -40,6 +41,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     MatPaginatorModule,
     MatCardModule,
     MatButtonModule,
+    MatTooltipModule,
     MatSnackBarModule,
     MatProgressBarModule,
     AppRoutingModule,

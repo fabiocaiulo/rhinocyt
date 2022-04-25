@@ -14,7 +14,7 @@
   <!-- File Uploaded -->
   <div class="files-list">
     <div class="single-file" *ngFor="let file of files; let i = index">
-      <img src="assets/file.svg" class="file" width="45px" (click)="showImage(i)">
+      <img src="assets/file.svg" class="file" width="45px" matTooltip="View" (click)="showImage(i)">
       <div class="info">
         <h4 class="name">{{ file?.name }}</h4>
         <p class="size">{{ formatBytes(file?.size, 2) }}</p>
@@ -22,7 +22,7 @@
           <div class="progress" [style.width]="file.progress + '%'"></div>
         </div>
       </div>
-      <img src="assets/delete.svg" class="delete" width="20px" (click)="removeFile(i)">
+      <img src="assets/remove.svg" class="remove" width="20px" matTooltip="Remove" (click)="removeFile(i)">
     </div>
   </div>
 

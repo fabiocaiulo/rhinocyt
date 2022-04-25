@@ -170,7 +170,7 @@ p {
   transition: 0.5s all;
 }
 
-.delete {
+.remove {
   display: flex;
   margin-left: 0.5rem;
   cursor: pointer;
