@@ -1,5 +1,6 @@
 <!-- Slides Card -->
 <ng-container *ngIf="values; else elseTemplate">
+  <mat-spinner *ngIf="slides.length === 0" class="spinner" color="accent"></mat-spinner>
   <mat-grid-list [class.mobileList]="mobileQuery.matches" [cols]="getCols()" [rowHeight]="mobileQuery.matches ? '425px' : laptopQuery.matches ? '450px' : desktopQuery.matches ? '475px' : '500px'">
     <mat-grid-tile *ngFor="let item of items; let i = index">
       <mat-card class="mat-elevation-z3">
