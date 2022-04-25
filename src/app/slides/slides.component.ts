@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 import { PageEvent } from '@angular/material/paginator';
@@ -13,6 +13,8 @@ import { Slide } from '../slide';
   styleUrls: ['./slides.component.css']
 })
 export class SlidesComponent implements OnInit, OnDestroy {
+
+  @ViewChild('slidesPaginator', { static: false }) private slidesPaginator: ElementRef = {} as ElementRef;
 
   values: boolean;
   items: Slide[];
@@ -96,12 +98,45 @@ export class SlidesComponent implements OnInit, OnDestroy {
       this.slideService.readSlides().subscribe(slides => {
         if(slides) {
           this.slides = slides;
-          this.slides.length !== 0 ? this.items = this.slides.splice(0, 2*this.getCols()) : this.values = false;
+          this.slides.length !== 0 ? this.items = this.slides.slice(0, 2*this.getCols()) : this.values = false;
         } else {
           this.values = false;
         }
       })
     );
+  }
+
+  // Hide the Slide from Server
+  deleteSlide(id: string, index: number) {
+    this.subscriptions.push(
+      this.slideService.hideSlide(id).subscribe(res => {
+        if(res.msg.toLowerCase() !== 'error') {
+          this.items.splice(index, 1);
+          this.slides.splice(this.getSlideIndexById(id), 1);
+          this.updateItems();
+        }
+      })
+    );
+  }
+
+  // Return the Index of Slide to be Removed
+  private getSlideIndexById(id: string): number {
+    let index = 0;
+    for(let i = 0; i < this.slides.length; i++) {
+      if(this.slides[i].id === id) index = i;
+    }
+    return index;
+  }
+
+  // Update the Slides
+  private updateItems(): void {
+    if(this.slides.length !== 0) {
+      const start = (this.slidesPaginator as any).pageSize * (this.slidesPaginator as any).pageIndex;
+      const end = start + (this.slidesPaginator as any).pageSize;
+      this.items = this.slides.slice(start, end);
+    } else {
+      this.values = false;
+    }
   }
 
 }

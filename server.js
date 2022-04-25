@@ -85,8 +85,20 @@ app.get('/api/slides/read', async (req, res) => {
   }
 })
 
+// POST: Hide Slide API
+app.post('/api/slides/hide', async(req, res) => {
+  try {
+    const id = req.query.id
+    await Slide.doc(id).update({ visible: false })
+    res.status(200).send({ msg: 'Hidden' })
+  } catch(error) {
+    console.log('Hide Slide API: ' + error.message)
+    res.status(400).send({ msg: 'Error' })
+  }
+})
+
 // App Settings
-app.get('/*', function (req,res) {
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname + '/dist/rhinocyt/index.html'))
 })
 

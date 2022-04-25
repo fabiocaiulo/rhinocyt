@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 
 import { FeedbackService } from './feedback.service';
 import { Response } from './response';
@@ -52,6 +51,14 @@ export class SlideService {
     const url = this.slidesUrl + 'read';
     return this.http.get<Slide[]>(url).pipe(
       catchError(this.handleError<Slide[]>('read slides'))
+    );
+  }
+
+  // POST: Hide the Slide to the Server
+  hideSlide(id: string): Observable<Response> {
+    const url = this.slidesUrl + 'hide?id=' + id;
+    return this.http.post<Response>(url, this.httpOptions).pipe(
+      catchError(this.handleError<Response>('delete the slide'))
     );
   }
 
