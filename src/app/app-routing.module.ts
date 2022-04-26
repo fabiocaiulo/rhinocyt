@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { SlidesComponent } from './slides/slides.component';
-import { AnalyzeComponent } from './analyze/analyze.component';
-import { UploadsComponent } from './uploads/uploads.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SlidesComponent } from './components/slides/slides.component';
+import { AnalyzeComponent } from './components/analyze/analyze.component';
+import { UploadsComponent } from './components/uploads/uploads.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 // Application Routes
 const routes: Routes = [

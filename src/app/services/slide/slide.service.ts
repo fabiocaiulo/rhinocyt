@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
 
-import { FeedbackService } from './feedback.service';
-import { Response } from './response';
-import { Slide } from './slide';
+import { FeedbackService } from '../feedback/feedback.service';
+import { Response } from '../../interfaces/response';
+import { Slide } from '../../interfaces/slide';
 
 @Injectable({
   providedIn: 'root'

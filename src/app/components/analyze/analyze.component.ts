@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { SlideService } from '../slide.service';
-import { Slide } from '../slide';
+import { SlideService } from '../../services/slide/slide.service';
+import { Slide } from '../../interfaces/slide';
 
 @Component({
   selector: 'app-analyze',

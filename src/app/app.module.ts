@@ -18,12 +18,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SlidesComponent } from './slides/slides.component';
-import { AnalyzeComponent } from './analyze/analyze.component';
-import { UploadsComponent } from './uploads/uploads.component';
-import { UploadsDirective } from './uploads.directive';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { DialogComponent } from './dialog/dialog.component';
+import { SlidesComponent } from './components/slides/slides.component';
+import { AnalyzeComponent } from './components/analyze/analyze.component';
+import { UploadsComponent } from './components/uploads/uploads.component';
+import { UploadsDirective } from './directives/uploads/uploads.directive';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [

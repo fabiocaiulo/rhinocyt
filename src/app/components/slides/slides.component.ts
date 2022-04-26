@@ -5,8 +5,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
-import { SlideService } from '../slide.service';
-import { Slide } from '../slide';
+import { SlideService } from '../../services/slide/slide.service';
+import { Slide } from '../../interfaces/slide';
 import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({

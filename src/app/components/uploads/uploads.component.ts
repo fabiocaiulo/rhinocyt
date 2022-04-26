@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { SlideService } from './../slide.service';
-import { FeedbackService } from '../feedback.service';
+import { SlideService } from '../../services/slide/slide.service';
+import { FeedbackService } from '../../services/feedback/feedback.service';
 
 @Component({
   selector: 'app-uploads',
