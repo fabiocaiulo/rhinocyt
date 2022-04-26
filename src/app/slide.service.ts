@@ -62,6 +62,14 @@ export class SlideService {
     );
   }
 
+  // GET: Read the Slide from the Server
+  readSlide(id: string): Observable<Slide> {
+    const url = this.slidesUrl + 'read/' + id;
+    return this.http.get<Slide>(url).pipe(
+      catchError(this.handleError<Slide>('read the slide'))
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

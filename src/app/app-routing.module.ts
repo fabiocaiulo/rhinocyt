@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SlidesComponent } from './slides/slides.component';
+import { AnalyzeComponent } from './analyze/analyze.component';
 import { UploadsComponent } from './uploads/uploads.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
@@ -9,6 +10,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 const routes: Routes = [
   { path: '', redirectTo: 'slides', pathMatch: 'full'},
   { path: 'slides', component: SlidesComponent },
+  { path: 'slides/analyze/:id', component: AnalyzeComponent},
   { path: 'uploads', component: UploadsComponent },
   { path: '**', pathMatch: 'full', component: PageNotFoundComponent}
 ];

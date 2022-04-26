@@ -113,7 +113,7 @@ export class SlidesComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
         title: 'Delete this slide?',
-        content: 'This will delete this element that are currently on this page and cannot be undone.',
+        content: 'This will delete slide that are currently on this page and cannot be undone.',
         action: 'Delete'
       }
     });

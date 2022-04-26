@@ -74,25 +74,37 @@ app.delete('/api/slides/remove', async (req, res) => {
   }
 })
 
-// GET: Read Slide API
+// GET: Read Slides API
 app.get('/api/slides/read', async (req, res) => {
   try {
     const snapshot = await Slide.where('visible', '==', true).orderBy('date', 'desc').get()
     res.status(200).send(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
   } catch(error) {
-    console.log('Read Slide API: ' + error.message)
+    console.log('Read Slides API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })
 
 // POST: Hide Slide API
-app.post('/api/slides/hide', async(req, res) => {
+app.post('/api/slides/hide', async (req, res) => {
   try {
     const id = req.query.id
     await Slide.doc(id).update({ visible: false })
     res.status(200).send({ msg: 'Hidden' })
   } catch(error) {
     console.log('Hide Slide API: ' + error.message)
+    res.status(400).send({ msg: 'Error' })
+  }
+})
+
+// GET: Read Slide API
+app.get('/api/slides/read/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const slide = await Slide.doc(id).get()
+    res.status(200).send({ id: slide.id, ...slide.data() })
+  } catch(error) {
+    console.log('Read Slide API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })
