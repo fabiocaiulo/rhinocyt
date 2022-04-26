@@ -1,3 +1,4 @@
+/* Content */
 html, body {
   height: 100%;
 }
@@ -5,4 +6,48 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Annotorious */
+.r6o-editor .r6o-btn {
+  background-color: #673ab7;
+  border: 1px solid #673ab7;
+}
+
+.r6o-editor .r6o-btn.outline {
+  color: #673ab7;
+  border: 1px solid #673ab7;
+}
+
+.r6o-editor .r6o-footer .r6o-btn.left.delete-annotation {
+  color: #f44336;
+}
+
+svg.a9s-annotationlayer .a9s-selection .a9s-outer,
+svg.a9s-annotationlayer .a9s-annotation .a9s-outer {
+  display: none;
+}
+
+svg.a9s-annotationlayer .a9s-handle .a9s-handle-outer {
+  display: none;
+}
+
+svg.a9s-annotationlayer .a9s-selection .a9s-inner,
+svg.a9s-annotationlayer .a9s-annotation .a9s-inner  {
+  stroke-width: 4;
+  stroke: white;
+  stroke-dasharray: 5;
+}
+
+svg.a9s-annotationlayer .a9s-annotation.editable:hover .a9s-inner {
+  fill: transparent;
+}
+
+svg.a9s-annotationlayer .a9s-handle .a9s-handle-inner {
+  fill: white;
+  stroke: white;
+}
+
+svg.a9s-annotationlayer .a9s-selection-mask {
+  fill: rgba(0, 0, 0, 0.6);
 }
