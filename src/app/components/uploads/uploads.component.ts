@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Subscription } from 'rxjs';
 
 import { SlideService } from '../../services/slide/slide.service';
 import { FeedbackService } from '../../services/feedback/feedback.service';
