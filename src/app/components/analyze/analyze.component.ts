@@ -7,6 +7,7 @@ import { Slide } from '../../interfaces/slide';
 
 import OpenSeadragon from 'openseadragon';
 import * as Annotorious from '@recogito/annotorious-openseadragon';
+import * as Selector from '@recogito/annotorious-selector-pack';
 import * as Toolbar from '@recogito/annotorious-toolbar';
 
 @Component({
@@ -17,7 +18,6 @@ import * as Toolbar from '@recogito/annotorious-toolbar';
 export class AnalyzeComponent implements OnInit, OnDestroy {
 
   slide: Slide;
-  private annotorious: any;
   private subscriptions: Subscription[];
 
   constructor(private route: ActivatedRoute, private slideService: SlideService) {
@@ -48,21 +48,41 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
 
   // Initialize Annotorious Plugin
   private setAnnotorious(url: string): void {
+    const anno = Annotorious(this.getViewer(url), this.getConfig());
+    this.setToolbar(anno);
+  }
+
+  // Initialize Openseadragon Viewer
+  private getViewer(url: string): any {
     const viewer = OpenSeadragon({
       id: 'slide',
       tileSources: {
         type: 'image',
-        url: url
+        url: url,
+        crossOriginPolicy: 'Anonymous'
       }
     });
+    return viewer;
+  }
+
+  // Initialize Annotorious Config
+  private getConfig(): any {
     const config = {
       widgets: [{
         widget: 'TAG',
         vocabulary: ['Ciliata', 'Mucipara', 'Striata', 'Basale', 'Neutrofilo', 'Eosinofilo', 'Mastcellula', 'Linfocita']
       }]
     };
-    this.annotorious = Annotorious(viewer, config);
-    Toolbar(this.annotorious, <HTMLDivElement>document.getElementById('toolbar'));
+    return config;
+  }
+
+  // Initialize Annotorious Toolbar
+  private setToolbar(anno: any): void {
+    Selector(anno, {
+      tools: ['circle', 'rect']
+    });
+    anno.removeDrawingTool('polygon');
+    Toolbar(anno, <HTMLDivElement>document.getElementById('toolbar'));
   }
 
 }

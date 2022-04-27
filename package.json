@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
     "@recogito/annotorious-openseadragon": "^2.7.4",
+    "@recogito/annotorious-selector-pack": "^0.5.3",
     "@recogito/annotorious-toolbar": "^1.1.0",
     "express": "^4.17.3",
     "firebase-admin": "^10.1.0",
