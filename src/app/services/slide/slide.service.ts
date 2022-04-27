@@ -12,10 +12,10 @@ import { Slide } from '../../interfaces/slide';
 export class SlideService {
 
   // URL to Remote Web Server
-  // private slidesUrl = 'https://rhinocyt.herokuapp.com';
+  private slidesUrl = 'https://rhinocyt.herokuapp.com';
 
   // URL to Local Web Server
-  private slidesUrl = 'http://localhost:8080/api/slides/';
+  // private slidesUrl = 'http://localhost:8080/api/slides/';
 
   // REST APIs: GET, POST, PUT, DELETE
   httpOptions = {

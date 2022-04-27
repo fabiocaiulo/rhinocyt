@@ -11,7 +11,7 @@ import { Location } from '@angular/common';
 })
 export class AppComponent implements OnDestroy {
 
-  @ViewChild('snav', { static: false }) private snav: ElementRef;
+  @ViewChild('snav', { static: true }) private snav: ElementRef;
   title: string;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener;
@@ -29,7 +29,7 @@ export class AppComponent implements OnDestroy {
   }
 
   closeSnav(): void {
-    (this.snav as any).close();
+    if(this.snav) (this.snav as any).close();
   }
 
 }

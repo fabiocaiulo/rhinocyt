@@ -70,3 +70,27 @@ svg.a9s-annotationlayer .a9s-handle .a9s-handle-inner {
 svg.a9s-annotationlayer .a9s-selection-mask {
   fill: rgba(0, 0, 0, 0.6);
 }
+
+/* Formatter */
+.a9s-annotationlayer .a9s-formatter-el,
+.a9s-annotationlayer .a9s-formatter-el foreignObject {
+  overflow: visible;
+  pointer-events: none;
+}
+
+.a9s-annotationlayer .a9s-formatter-el foreignObject .a9s-shape-label-wrapper {
+  position: relative;
+  -webkit-transform: translateY(-100%);
+  transform: translateY(-100%);
+  padding-bottom: 4px;
+}
+
+.a9s-annotationlayer .a9s-formatter-el foreignObject .a9s-shape-label-wrapper .a9s-shape-label {
+  display: table;
+  padding: 3px 5px;
+  white-space: nowrap;
+  background-color: rgba(0,0,0,.87);
+  color: white;
+  border-radius: 3px;
+  font-size: 14px;
+}

@@ -83,12 +83,28 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Initialize Annotorious Config
   private getConfig(): any {
     const config = {
+      formatter: this.Formatter,
       widgets: [{
         widget: 'TAG',
         vocabulary: ['Ciliata', 'Mucipara', 'Striata', 'Basale', 'Neutrofilo', 'Eosinofilo', 'Mastcellula', 'Linfocita']
       }]
     };
     return config;
+  }
+
+  // Labels Annotorious Formatter
+  Formatter = function(annotation: any) {
+    let result = {}
+    const bodies = Array.isArray(annotation.body) ? annotation.body : [ annotation.body ];
+    const firstTag = bodies.find((b: { purpose: string; }) => b.purpose == 'tagging');
+    if (firstTag) {
+      const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+      foreignObject.setAttribute('width', '1px');
+      foreignObject.setAttribute('height', '1px');
+      foreignObject.innerHTML = '<div xmlns="http://www.w3.org/1999/xhtml" class="a9s-shape-label-wrapper"><div class="a9s-shape-label">' + firstTag.value + '</div></div>';
+      result = { element: foreignObject, className: firstTag.value };
+    }
+    return result;
   }
 
   // Initialize Annotorious Toolbar

@@ -114,7 +114,10 @@ app.put('/api/slides/annotations', async (req, res) => {
   try {
     const id = req.query.id
     const annotations = req.body
-    await Slide.doc(id).update({ annotations: annotations })
+    await Slide.doc(id).update({
+      annotations: annotations,
+      date: new Date().toDateString() + ' ' + new Date().toTimeString()
+    })
     res.status(200).send({ msg: 'Saved' })
   } catch(error) {
     console.log('Annotations Slide API: ' + error.message)
