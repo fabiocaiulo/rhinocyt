@@ -20,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SlidesComponent } from './components/slides/slides.component';
 import { AnalyzeComponent } from './components/analyze/analyze.component';
+import { SeeComponent } from './components/see/see.component';
 import { UploadsComponent } from './components/uploads/uploads.component';
 import { UploadsDirective } from './directives/uploads/uploads.directive';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -30,6 +31,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     AppComponent,
     SlidesComponent,
     AnalyzeComponent,
+    SeeComponent,
     UploadsComponent,
     UploadsDirective,
     PageNotFoundComponent,
