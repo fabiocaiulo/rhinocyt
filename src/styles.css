@@ -35,17 +35,18 @@ svg.a9s-annotationlayer .a9s-handle .a9s-handle-outer {
 svg.a9s-annotationlayer .a9s-selection .a9s-inner,
 svg.a9s-annotationlayer .a9s-annotation .a9s-inner  {
   stroke-width: 4;
-  stroke: white;
+  stroke: black;
   stroke-dasharray: 5;
 }
 
 svg.a9s-annotationlayer .a9s-annotation.editable:hover .a9s-inner {
   fill: transparent;
+  stroke: black;
 }
 
 svg.a9s-annotationlayer .a9s-handle .a9s-handle-inner {
-  fill: white;
-  stroke: white;
+  fill: black;
+  stroke: black;
 }
 
 svg.a9s-annotationlayer .a9s-selection-mask {
