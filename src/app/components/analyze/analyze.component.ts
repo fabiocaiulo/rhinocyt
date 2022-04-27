@@ -7,6 +7,7 @@ import { Slide } from '../../interfaces/slide';
 
 import OpenSeadragon from 'openseadragon';
 import * as Annotorious from '@recogito/annotorious-openseadragon';
+import * as Toolbar from '@recogito/annotorious-toolbar';
 
 @Component({
   selector: 'app-analyze',
@@ -61,6 +62,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
       }]
     };
     this.annotorious = Annotorious(viewer, config);
+    Toolbar(this.annotorious, <HTMLDivElement>document.getElementById('toolbar'));
   }
 
 }
