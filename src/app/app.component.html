@@ -8,6 +8,7 @@
         <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
       </ng-container>
       <ng-template #elseTemplate>
+        {{ closeSnav() }}
         <button mat-icon-button (click)="location.back()"><mat-icon>arrow_back</mat-icon></button>
       </ng-template>
       <h1>{{ title }}</h1>

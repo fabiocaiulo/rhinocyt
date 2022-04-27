@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,8 +15,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 })
 export class SlidesComponent implements OnInit, OnDestroy {
 
-  @ViewChild('slidesPaginator', { static: false }) private slidesPaginator: ElementRef = {} as ElementRef;
-
+  @ViewChild('slidesPaginator', { static: false }) private slidesPaginator: ElementRef;
   values: boolean;
   items: Slide[];
   slides: Slide[];
@@ -30,6 +29,7 @@ export class SlidesComponent implements OnInit, OnDestroy {
   private _desktopQueryListener = () => {};
 
   constructor(private slideService: SlideService, private dialog: MatDialog, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+    this.slidesPaginator = {} as ElementRef;
     this.values = true;
     this.items = [];
     this.slides = [];

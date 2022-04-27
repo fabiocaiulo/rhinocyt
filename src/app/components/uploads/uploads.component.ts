@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { SlideService } from '../../services/slide/slide.service';
@@ -11,7 +11,7 @@ import { FeedbackService } from '../../services/feedback/feedback.service';
 })
 export class UploadsComponent implements OnDestroy {
 
-  @ViewChild('fileDropRef', { static: false }) private fileDropRef: ElementRef = {} as ElementRef;
+  @ViewChild('fileDropRef', { static: false }) private fileDropRef: ElementRef;
   files: any[];
   imageModal: string;
   image: any;
@@ -19,6 +19,7 @@ export class UploadsComponent implements OnDestroy {
   private subscriptions: Subscription[];
 
   constructor(private slideService: SlideService, private feedbackService: FeedbackService) {
+    this.fileDropRef = {} as ElementRef;
     this.files = [];
     this.name = '';
     this.imageModal = 'none';
