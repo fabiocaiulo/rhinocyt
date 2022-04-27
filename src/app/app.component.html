@@ -4,7 +4,12 @@
   <!-- Toolbar -->
   <header>
     <mat-toolbar color="primary" class="toolbar">
-      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      <ng-container *ngIf="router.url == '/uploads' || router.url == '/slides'; else elseTemplate">
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      </ng-container>
+      <ng-template #elseTemplate>
+        <button mat-icon-button (click)="location.back()"><mat-icon>arrow_back</mat-icon></button>
+      </ng-template>
       <h1>{{ title }}</h1>
     </mat-toolbar>
   </header>
