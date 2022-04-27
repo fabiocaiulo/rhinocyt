@@ -52,6 +52,11 @@ svg.a9s-annotationlayer .a9s-annotation .a9s-inner  {
   stroke-dasharray: 5;
 }
 
+svg.a9s-annotationlayer .a9s-selection .a9s-inner:hover,
+svg.a9s-annotationlayer .a9s-annotation .a9s-inner:hover  {
+  stroke: rgba(0,0,0,.87);
+}
+
 svg.a9s-annotationlayer .a9s-annotation.editable:hover .a9s-inner {
   fill: transparent;
   stroke: rgba(0,0,0,.87);
