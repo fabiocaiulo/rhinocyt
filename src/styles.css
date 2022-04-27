@@ -10,17 +10,30 @@ body {
 
 /* Annotorious */
 .r6o-editor .r6o-btn {
-  background-color: #673ab7;
-  border: 1px solid #673ab7;
+  background-color: rgba(0,0,0,.87);
+  border: 1px solid rgba(0,0,0,.87);
+}
+
+.r6o-editor .r6o-btn:hover {
+  background-color: rgba(0,0,0,.87);
+  border: 1px solid rgba(0,0,0,.87);
 }
 
 .r6o-editor .r6o-btn.outline {
-  color: #673ab7;
-  border: 1px solid #673ab7;
+  color: rgba(0,0,0,.87);
+  border: 1px solid rgba(0,0,0,.87);
+}
+
+.r6o-editor .r6o-btn.outline:hover {
+  background-color: transparent;
 }
 
 .r6o-editor .r6o-footer .r6o-btn.left.delete-annotation {
   color: #f44336;
+}
+
+.r6o-editor .r6o-widget.r6o-tag ul.r6o-taglist li .r6o-delete-wrapper {
+  background-color: #f44336;
 }
 
 svg.a9s-annotationlayer .a9s-selection .a9s-outer,
@@ -35,18 +48,18 @@ svg.a9s-annotationlayer .a9s-handle .a9s-handle-outer {
 svg.a9s-annotationlayer .a9s-selection .a9s-inner,
 svg.a9s-annotationlayer .a9s-annotation .a9s-inner  {
   stroke-width: 4;
-  stroke: black;
+  stroke: rgba(0,0,0,.87);
   stroke-dasharray: 5;
 }
 
 svg.a9s-annotationlayer .a9s-annotation.editable:hover .a9s-inner {
   fill: transparent;
-  stroke: black;
+  stroke: rgba(0,0,0,.87);
 }
 
 svg.a9s-annotationlayer .a9s-handle .a9s-handle-inner {
-  fill: black;
-  stroke: black;
+  fill: rgba(0,0,0,.87);
+  stroke: rgba(0,0,0,.87);
 }
 
 svg.a9s-annotationlayer .a9s-selection-mask {
