@@ -109,6 +109,19 @@ app.get('/api/slides/read/:id', async (req, res) => {
   }
 })
 
+// PUT: Annotations Slide API
+app.put('/api/slides/annotations', async (req, res) => {
+  try {
+    const id = req.query.id
+    const annotations = req.body
+    await Slide.doc(id).update({ annotations: annotations })
+    res.status(200).send({ msg: 'Saved' })
+  } catch(error) {
+    console.log('Annotations Slide API: ' + error.message)
+    res.status(400).send({ msg: 'Error' })
+  }
+})
+
 // App Settings
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname + '/dist/rhinocyt/index.html'))

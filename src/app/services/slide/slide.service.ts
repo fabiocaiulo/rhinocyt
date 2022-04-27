@@ -70,6 +70,14 @@ export class SlideService {
     );
   }
 
+  // PUT: Save Annotations to the Server
+  saveAnnotations(id: string, annotations: any): Observable<Response> {
+    const url = this.slidesUrl + 'annotations?id=' + id;
+    return this.http.put<Response>(url, annotations, this.httpOptions).pipe(
+      catchError(this.handleError<Response>('save annotations'))
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

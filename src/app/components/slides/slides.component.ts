@@ -116,9 +116,11 @@ export class SlidesComponent implements OnInit, OnDestroy {
         action: 'Delete'
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) this.deleteSlide(id, index)
-    });
+    this.subscriptions.push(
+      dialogRef.afterClosed().subscribe(result => {
+        if(result) this.deleteSlide(id, index)
+      })
+    );
   }
 
   // Hide the Slide from Server

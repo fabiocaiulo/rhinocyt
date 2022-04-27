@@ -49,7 +49,22 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Initialize Annotorious Plugin
   private setAnnotorious(url: string): void {
     const anno = Annotorious(this.getViewer(url), this.getConfig());
+    anno.setAnnotations(this.slide.annotations);
     this.setToolbar(anno);
+    this.storeAnnotations(anno, this.subscriptions, this.slide, this.slideService);
+  }
+
+  // Store Annotations on the Server
+  storeAnnotations = function(anno: any, subscriptions: Subscription[], slide: Slide, slideService: SlideService) {
+    anno.on('createAnnotation', function() {
+      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe())
+    })
+    anno.on('updateAnnotation', function() {
+      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe())
+    })
+    anno.on('deleteAnnotation', function() {
+      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe())
+    })
   }
 
   // Initialize Openseadragon Viewer
