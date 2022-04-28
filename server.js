@@ -50,7 +50,7 @@ app.post('/api/slides/upload', upload.single('image'), async (req, res) => {
       visible: true,
       date: new Date().toDateString() + ' ' + new Date().toTimeString(),
       image: bucket.file(destination).publicUrl(),
-      annotations: ['']
+      annotations: []
     })
     res.status(200).send({ msg: 'Uploaded' })
   } catch(error) {

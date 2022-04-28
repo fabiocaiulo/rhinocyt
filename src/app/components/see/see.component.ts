@@ -47,7 +47,7 @@ export class SeeComponent implements OnInit, OnDestroy {
   // Initialize Annotorious Plugin
   private setAnnotorious(url: string): void {
     const anno = Annotorious(this.getViewer(url), this.getConfig());
-    anno.setAnnotations(this.slide.annotations);
+    if(this.slide.annotations.length > 0) anno.setAnnotations(this.slide.annotations);
   }
 
   // Initialize Openseadragon Viewer

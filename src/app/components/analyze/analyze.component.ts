@@ -49,7 +49,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Initialize Annotorious Plugin
   private setAnnotorious(url: string): void {
     const anno = Annotorious(this.getViewer(url), this.getConfig());
-    anno.setAnnotations(this.slide.annotations);
+    if(this.slide.annotations.length > 0) anno.setAnnotations(this.slide.annotations);
     this.setToolbar(anno);
     this.storeAnnotations(anno, this.subscriptions, this.slide, this.slideService);
   }
