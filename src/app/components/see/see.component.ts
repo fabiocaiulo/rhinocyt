@@ -67,7 +67,11 @@ export class SeeComponent implements OnInit, OnDestroy {
   private getConfig(): any {
     const config = {
       formatter: this.Formatter,
-      readOnly: true
+      readOnly: true,
+      widgets: [
+        'TAG',
+        'COMMENT'
+      ]
     };
     return config;
   }
