@@ -107,7 +107,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Initialize Annotorious Toolbar
   private setToolbar(anno: any): void {
     Selector(anno, {
-      tools: ['circle', 'rect']
+      tools: ['circle', 'rect', 'ellipse']
     });
     anno.removeDrawingTool('polygon');
     Toolbar(anno, <HTMLDivElement>document.getElementById('toolbar'));

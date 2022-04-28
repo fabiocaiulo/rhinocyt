@@ -9,13 +9,15 @@
 }
 
 .slide {
-  height: 90%;
+  height: 100%;
   width: auto;
   background-color: white;
 }
 
 .toolbar {
-  min-height: 50px;
-  width: 90%;
-  margin-left: 5px;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  height: 50px;
+  z-index: 3;
 }
