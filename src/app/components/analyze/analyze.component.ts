@@ -8,6 +8,7 @@ import { Slide } from '../../interfaces/slide';
 import OpenSeadragon from 'openseadragon';
 import * as Annotorious from '@recogito/annotorious-openseadragon';
 import * as Selector from '@recogito/annotorious-selector-pack';
+import * as Polygon from '@recogito/annotorious-better-polygon';
 import * as Toolbar from '@recogito/annotorious-toolbar';
 
 import * as MobileNet from '@tensorflow-models/mobilenet';
@@ -109,7 +110,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     Selector(anno, {
       tools: ['circle', 'rect', 'ellipse']
     });
-    anno.removeDrawingTool('polygon');
+    Polygon(anno);
     Toolbar(anno, <HTMLDivElement>document.getElementById('toolbar'));
   }
 
