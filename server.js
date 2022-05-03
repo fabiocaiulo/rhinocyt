@@ -12,6 +12,7 @@ const database = admin.firestore()
 const bucket = admin.storage().bucket('gs://rhinocytology.appspot.com')
 
 const Slide = database.collection('Slides')
+const Model = database.collection('Models')
 
 // Express Settings
 const express = require('express')
@@ -121,6 +122,18 @@ app.put('/api/slides/annotations', async (req, res) => {
     res.status(200).send({ msg: 'Saved' })
   } catch(error) {
     console.log('Annotations Slide API: ' + error.message)
+    res.status(400).send({ msg: 'Error' })
+  }
+})
+
+// PUT: Save Model API
+app.put('/api/models/save', async (req, res) => {
+  try {
+    const id = req.query.id
+    const model = req.body
+    await Model.doc(id).update({ model: model })
+  } catch(error) {
+    console.log('Save Model API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })

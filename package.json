@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
     "@recogito/annotorious-better-polygon": "^0.1.5",
-    "@recogito/annotorious-openseadragon": "^2.7.4",
+    "@recogito/annotorious-openseadragon": "^2.7.6",
     "@recogito/annotorious-selector-pack": "^0.5.3",
     "@recogito/annotorious-toolbar": "^1.1.0",
     "@tensorflow-models/knn-classifier": "^1.2.4",

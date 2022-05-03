@@ -55,10 +55,11 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
 
   // Initialize Annotorious Plugin
   private setAnnotorious(url: string): void {
-    const anno = Annotorious(this.getViewer(url), this.getConfig());
+    const viewer = this.getViewer(url);
+    const anno = Annotorious(viewer, this.getConfig());
     if(this.slide.annotations.length > 0) anno.setAnnotations(this.slide.annotations);
     this.setToolbar(anno);
-    this.smartTagging(anno, this.slide.image);
+    this.tagSuggestion(anno, viewer);
     this.storeAnnotations(anno, this.subscriptions, this.slide, this.slideService);
   }
 
@@ -127,25 +128,20 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     })
   }
 
-  // See https://codelabs.developers.google.com/tensorflowjs-transfer-learning-teachable-machine
-  smartTagging = async (anno: any, image: string) => {
-    console.log('Loading MobileNet');
-    console.time('MobileNet loaded');
+  // Suggest Tag with a KNN Classifier
+  tagSuggestion = async (anno: any, viewer: any) => {
+    const classifier = KNNClassifier.create();
     const mnet = await MobileNet.load();
     this.modelLoaded = true;
-    console.timeEnd('MobileNet loaded');
 
-    const classifier = KNNClassifier.create();
-
-    // When the user creates a new selection, we'll classify the snippet
+    // When the User Creates a new Selection, we'll Classify the Snippet
     anno.on('createSelection', async function(selection: any) {
       if (classifier.getNumClasses() > 1) {
-        const snippet = await getImageSnippet(image, selection);
+        const snippet = getSnippet(viewer, selection);
         const activation = mnet.infer(snippet, true);
         const result = await classifier.predictClass(activation);
-
+        // Inject into the Current Annotation
         if (result) {
-          // Inject into the current annotation
           selection.body = [
             {
               type: 'TextualBody',
@@ -163,64 +159,65 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
       }
     });
 
-    // When the user hits 'Ok', we'll store the snippet as a new example
-    anno.on('createAnnotation', async function(annotation: any) {
+    // When the User hits 'Ok', we'll Store the Snippet as a new Example
+    anno.on('createAnnotation', function(annotation: any) {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
-        const snippet = await getImageSnippet(image, annotation);
+        const snippet = getSnippet(viewer, annotation);
         const activation = mnet.infer(snippet, true);
         classifier.addExample(activation, tag.value);
       }
     });
 
-    // When the user hits 'Ok', we'll store the snippet as a new example
-    anno.on('updateAnnotation', async function(annotation: any) {
+    // When the User hits 'Ok', we'll Store the Snippet as a new Example
+    anno.on('updateAnnotation', function(annotation: any) {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
-        const snippet = await getImageSnippet(image, annotation);
+        const snippet = getSnippet(viewer, annotation);
         const activation = mnet.infer(snippet, true);
         classifier.addExample(activation, tag.value);
       }
     });
-  }
 
-}
+    // Returns Rect Canvas from Annotation
+    function getSnippet(viewer: any, annotation: any): HTMLCanvasElement {
+      const outerBounds = getElement(annotation).getBoundingClientRect();
 
-async function getImageSnippet(url: string, annotation: any): Promise<HTMLCanvasElement> {
-  let image = await createImage(url);
+      // Scale Factor for OSD Canvas Element (Physical vs Logical Resolution)
+      const { canvas } = viewer.drawer;
+      const canvasBounds = canvas.getBoundingClientRect();
+      const kx = canvas.width / canvasBounds.width;
+      const ky = canvas.height / canvasBounds.height;
 
-  let { naturalWidth, naturalHeight } = image;
-  let canvas = document.createElement('canvas');
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
+      const x = outerBounds.x - canvasBounds.x;
+      const y = outerBounds.y - canvasBounds.y;
+      const { width, height } = outerBounds;
 
-  let context = canvas.getContext('2d');
-  if(context != null) context.drawImage(image, 0, 0, naturalWidth, naturalHeight);
+      // Cut Out the Image Snippet as in-memory Canvas Element
+      const snippet = document.createElement('canvas');
+      const ctx = snippet.getContext('2d');
+      snippet.width = width;
+      snippet.height = height;
+      ctx?.drawImage(canvas, x * kx, y * ky, width * kx, height * ky, 0, 0, width, height);
 
-  let { x, y, width, height } = annotation.target.selector.value;
-  if(context != null) {
-    context.shadowOffsetX = 3;
-    context.shadowOffsetY = 3;
-    context.shadowBlur = 3;
-    context.shadowColor = 'rgba(255, 255, 255, 0.5)';
-    context.strokeStyle = '#131313';
-    context.lineWidth = 3;
-    context.globalCompositeOperation = 'source-in';
-    context.fillRect(x, y, width, height);
-  }
-
-  return canvas;
-}
-
-function createImage(url: string): Promise<HTMLImageElement> {
-  return new Promise(resolve => {
-    let img = new Image();
-    img.src = url
-    img.crossOrigin = 'anonymous'
-    img.onload = () => {
-      img.height = img.naturalHeight;
-      img.width = img.naturalWidth;
-      resolve(img);
+      return snippet;
     }
-  })
+
+    // Returns DOM Element from Annotation
+    function getElement(annotation: any): Element {
+      let element;
+      if(annotation.id !== undefined) {
+        element = document.querySelector('[data-id="' + annotation.id + '"]');
+      } else {
+        if(annotation.target.selector.value.slice(6, 13) !== 'polygon') {
+          element = document.querySelector('[class="a9s-annotation editable selected"]');
+        } else {
+          element = document.querySelector('[class="a9s-annotation editable selected improved-polygon"]');
+        }
+      }
+      return element != null ? element : {} as Element;
+    }
+
+  }
+
 }
