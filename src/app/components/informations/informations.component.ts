@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 
 import { ModelService } from 'src/app/services/model/model.service';
@@ -18,12 +19,14 @@ interface Class {
 })
 export class InformationsComponent implements OnInit, OnDestroy {
 
+  @ViewChild('table', { static: false }) private table: MatTable<Class>;
   columns: string[];
   classes: Class[];
   examples: number;
   private subscriptions: Subscription[];
 
   constructor(private modelService: ModelService) {
+    this.table = {} as MatTable<Class>;
     this.columns = ['cell', 'examples'];
     this.classes = [];
     this.examples = 0;
@@ -48,6 +51,7 @@ export class InformationsComponent implements OnInit, OnDestroy {
             Object.fromEntries(model.dataset.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
           );
           this.setClassesInformations(classifier.getClassExampleCount());
+          this.table.renderRows();
         }
       })
     );
