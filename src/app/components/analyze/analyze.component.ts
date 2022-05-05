@@ -135,19 +135,28 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
 
   // Store Annotations on the Server
   storeAnnotations = function(anno: any, subscriptions: Subscription[], slide: Slide, slideService: SlideService) {
+
     anno.on('createAnnotation', function() {
-      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
+      store();
     })
+
     anno.on('updateAnnotation', function() {
-      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
+      store();
     })
+
     anno.on('deleteAnnotation', function() {
-      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
+      store();
     })
+
+    function store() {
+      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
+    }
+
   }
 
   // Suggest Tag with a KNN Classifier
   tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], modelService: ModelService) => {
+
     const mnet = await MobileNet.load();
     this.modelLoaded = true;
 
@@ -177,19 +186,17 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     });
 
     // When the User hits 'Ok', we'll Store the Snippet as a new Example
-    anno.on('createAnnotation', async function(annotation: any) {
-      const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
-      if(tag) {
-        const snippet = getSnippet(viewer, annotation);
-        const activation = mnet.infer(snippet, true);
-        classifier.addExample(activation, tag.value);
-        let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
-        subscriptions.push(modelService.saveModel('KNNClassifier', dataset).subscribe());
-      }
+    anno.on('createAnnotation', function(annotation: any) {
+      transferLearning(annotation);
     });
 
     // When the User hits 'Ok', we'll Store the Snippet as a new Example
-    anno.on('updateAnnotation', async function(annotation: any) {
+    anno.on('updateAnnotation', function(annotation: any) {
+      transferLearning(annotation);
+    });
+
+    // Make the Transfer Learning process
+    function transferLearning(annotation: any): void {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
         const snippet = getSnippet(viewer, annotation);
@@ -198,7 +205,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
         let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
         subscriptions.push(modelService.saveModel('KNNClassifier', dataset).subscribe());
       }
-    });
+    }
 
     // Returns Rect Canvas from Annotation
     function getSnippet(viewer: any, annotation: any): HTMLCanvasElement {
@@ -238,6 +245,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
       }
       return element != null ? element : {} as Element;
     }
+
   }
 
 }
