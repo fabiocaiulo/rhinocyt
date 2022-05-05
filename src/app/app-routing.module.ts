@@ -5,6 +5,7 @@ import { SlidesComponent } from './components/slides/slides.component';
 import { AnalyzeComponent } from './components/analyze/analyze.component';
 import { SeeComponent } from './components/see/see.component';
 import { UploadsComponent } from './components/uploads/uploads.component';
+import { InformationsComponent } from './components/informations/informations.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 // Application Routes
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'slides/analyze/:id', component: AnalyzeComponent},
   { path: 'slides/see/:id', component: SeeComponent },
   { path: 'uploads', component: UploadsComponent },
+  { path: 'informations', component: InformationsComponent },
   { path: '**', pathMatch: 'full', component: PageNotFoundComponent}
 ];
 

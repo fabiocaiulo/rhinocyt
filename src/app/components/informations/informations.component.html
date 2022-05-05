@@ -1,0 +1,15 @@
+<table mat-table [dataSource]="classes" class="mat-elevation-z8">
+  <ng-container matColumnDef="cell">
+    <th mat-header-cell *matHeaderCellDef> Cell </th>
+    <td mat-cell *matCellDef="let class"> {{ class.cell }} </td>
+    <td mat-footer-cell *matFooterCellDef> Total </td>
+  </ng-container>
+  <ng-container matColumnDef="examples">
+    <th mat-header-cell *matHeaderCellDef> Examples </th>
+    <td mat-cell *matCellDef="let class"> {{ class.examples }} </td>
+    <td mat-footer-cell *matFooterCellDef> {{ examples }} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+  <tr mat-footer-row *matFooterRowDef="columns"></tr>
+</table>

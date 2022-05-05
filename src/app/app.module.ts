@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -23,6 +24,7 @@ import { AnalyzeComponent } from './components/analyze/analyze.component';
 import { SeeComponent } from './components/see/see.component';
 import { UploadsComponent } from './components/uploads/uploads.component';
 import { UploadsDirective } from './directives/uploads/uploads.directive';
+import { InformationsComponent } from './components/informations/informations.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 
@@ -34,6 +36,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     SeeComponent,
     UploadsComponent,
     UploadsDirective,
+    InformationsComponent,
     PageNotFoundComponent,
     DialogComponent
   ],
@@ -52,6 +55,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     MatTooltipModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatTableModule,
     AppRoutingModule,
     HttpClientModule
   ],

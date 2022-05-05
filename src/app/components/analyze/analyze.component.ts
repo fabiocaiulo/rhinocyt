@@ -23,9 +23,9 @@ import * as Tensorflow from '@tensorflow/tfjs';
 })
 export class AnalyzeComponent implements OnInit, OnDestroy {
 
-  slide: Slide;
-  classifier: any;
   modelLoaded: boolean;
+  private slide: Slide;
+  private classifier: any;
   private subscriptions: Subscription[];
 
   constructor(private route: ActivatedRoute, private slideService: SlideService, private modelService: ModelService) {
