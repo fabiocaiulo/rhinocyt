@@ -12,7 +12,6 @@ const database = admin.firestore()
 const bucket = admin.storage().bucket('gs://rhinocytology.appspot.com')
 
 const Slide = database.collection('Slides')
-const Model = database.collection('Models')
 
 // Express Settings
 const express = require('express')
@@ -20,15 +19,18 @@ const cors = require('cors')
 const path = require('path')
 
 const app = express()
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
 app.use(cors())
 app.use(express.static(__dirname + '/dist/rhinocyt'))
 
-// Multer Settings
-global.XMLHttpRequest = require('xhr2');
+// Files Settings
 const fs = require('fs')
 const { promisify } = require('util')
 const unlinkAsync = promisify(fs.unlink)
+const readFileAsync = promisify(fs.readFile)
+
+// Multer Settings
+global.XMLHttpRequest = require('xhr2')
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -129,14 +131,41 @@ app.put('/api/slides/annotations', async (req, res) => {
 // PUT: Save Model API
 app.put('/api/models/save', async (req, res) => {
   try {
-    const id = req.query.id
-    const model = req.body
-    await Model.doc(id).update({ model: model })
+    const name = req.query.name
+    const destination = 'models/' + name + '.json'
+    const dataset = req.body
+    await bucket.file(destination).save(JSON.stringify(dataset))
+    res.status(200).send({ msg: 'Uploaded' })
   } catch(error) {
     console.log('Save Model API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })
+
+// GET: Load Model API
+app.get('/api/models/load/:name', async (req, res) => {
+  try {
+    const name = req.params.name
+    const destination = 'models/' + name + '.json'
+    bucket.file(destination).exists(async function(err, exists) {
+      if(err) throw err
+      if(exists) loadModel(name, destination, res)
+      else res.status(200).send({ name: name, dataset: undefined })
+    })
+  } catch(error) {
+    console.log('Load Model API: ' + error.message)
+    res.status(400).send({ msg: 'Error' })
+  }
+})
+
+function loadModel(name, destination, res) {
+  const file = 'files/' + name + '.json'
+  bucket.file(destination).createReadStream().on('end', async function() {
+    const dataset = await readFileAsync(file)
+    await unlinkAsync(file)
+    res.status(200).send({ name: name, dataset: JSON.parse(dataset) })
+  }).pipe(fs.createWriteStream(file))
+}
 
 // App Settings
 app.get('/*', function (req, res) {

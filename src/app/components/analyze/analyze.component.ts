@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { ModelService } from 'src/app/services/model/model.service';
 import { SlideService } from '../../services/slide/slide.service';
 import { Slide } from '../../interfaces/slide';
 
@@ -13,7 +14,7 @@ import * as Toolbar from '@recogito/annotorious-toolbar';
 
 import * as MobileNet from '@tensorflow-models/mobilenet';
 import * as KNNClassifier from '@tensorflow-models/knn-classifier';
-import '@tensorflow/tfjs';
+import * as Tensorflow from '@tensorflow/tfjs';
 
 @Component({
   selector: 'app-analyze',
@@ -23,21 +24,25 @@ import '@tensorflow/tfjs';
 export class AnalyzeComponent implements OnInit, OnDestroy {
 
   slide: Slide;
+  classifier: any;
   modelLoaded: boolean;
   private subscriptions: Subscription[];
 
-  constructor(private route: ActivatedRoute, private slideService: SlideService) {
+  constructor(private route: ActivatedRoute, private slideService: SlideService, private modelService: ModelService) {
     this.slide = {} as Slide;
+    this.classifier = KNNClassifier.create();
     this.modelLoaded = false;
     this.subscriptions = [];
   }
 
   ngOnInit(): void {
     this.getSlide();
+    this.setModel();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe);
+    this.classifier.dispose();
   }
 
   // Retrieve the Slide from the Server
@@ -53,13 +58,26 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Retrieve the Model from the Server
+  private setModel(): void {
+    this.subscriptions.push(
+      this.modelService.loadModel('KNNClassifier').subscribe(model => {
+        if(model.dataset) {
+          this.classifier.setClassifierDataset(
+            Object.fromEntries(model.dataset.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
+          );
+        }
+      })
+    );
+  }
+
   // Initialize Annotorious Plugin
   private setAnnotorious(url: string): void {
     const viewer = this.getViewer(url);
     const anno = Annotorious(viewer, this.getConfig());
     if(this.slide.annotations.length > 0) anno.setAnnotations(this.slide.annotations);
     this.setToolbar(anno);
-    this.tagSuggestion(anno, viewer);
+    this.tagSuggestion(this.classifier, anno, viewer, this.subscriptions, this.modelService);
     this.storeAnnotations(anno, this.subscriptions, this.slide, this.slideService);
   }
 
@@ -129,8 +147,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   }
 
   // Suggest Tag with a KNN Classifier
-  tagSuggestion = async (anno: any, viewer: any) => {
-    const classifier = KNNClassifier.create();
+  tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], modelService: ModelService) => {
     const mnet = await MobileNet.load();
     this.modelLoaded = true;
 
@@ -160,22 +177,26 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     });
 
     // When the User hits 'Ok', we'll Store the Snippet as a new Example
-    anno.on('createAnnotation', function(annotation: any) {
+    anno.on('createAnnotation', async function(annotation: any) {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
         const snippet = getSnippet(viewer, annotation);
         const activation = mnet.infer(snippet, true);
         classifier.addExample(activation, tag.value);
+        let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
+        subscriptions.push(modelService.saveModel('KNNClassifier', dataset).subscribe());
       }
     });
 
     // When the User hits 'Ok', we'll Store the Snippet as a new Example
-    anno.on('updateAnnotation', function(annotation: any) {
+    anno.on('updateAnnotation', async function(annotation: any) {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
         const snippet = getSnippet(viewer, annotation);
         const activation = mnet.infer(snippet, true);
         classifier.addExample(activation, tag.value);
+        let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
+        subscriptions.push(modelService.saveModel('KNNClassifier', dataset).subscribe());
       }
     });
 
@@ -217,7 +238,6 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
       }
       return element != null ? element : {} as Element;
     }
-
   }
 
 }
