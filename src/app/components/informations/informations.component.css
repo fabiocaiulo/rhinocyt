@@ -8,6 +8,10 @@
   z-index: 3;
 }
 
+.page {
+  margin-bottom: 25px;
+}
+
 table {
   width: 100%;
   max-width: 450px;

@@ -1,5 +1,5 @@
 <mat-spinner *ngIf="!modelLoaded" class="spinner" color="accent"></mat-spinner>
-<div *ngIf="modelLoaded">
+<div *ngIf="modelLoaded" class="page">
   <h1>Dataset</h1>
   <table #table mat-table [dataSource]="classes" class="mat-elevation-z8">
     <ng-container matColumnDef="cell">
