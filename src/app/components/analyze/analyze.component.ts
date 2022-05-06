@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 
 import { SlideService } from '../../services/slide/slide.service';
 import { Slide } from '../../interfaces/slide';
-import Model from '../../../../files/KNNClassifier.json';
 
 import OpenSeadragon from 'openseadragon';
 import * as Annotorious from '@recogito/annotorious-openseadragon';
@@ -24,6 +23,7 @@ import * as Tensorflow from '@tensorflow/tfjs';
 export class AnalyzeComponent implements OnInit, OnDestroy {
 
   modelLoaded: boolean;
+  mobileNetLoaded: boolean;
   private slide: Slide;
   private classifier: any;
   private subscriptions: Subscription[];
@@ -32,6 +32,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     this.slide = {} as Slide;
     this.classifier = KNNClassifier.create();
     this.modelLoaded = false;
+    this.mobileNetLoaded = false;
     this.subscriptions = [];
   }
 
@@ -61,12 +62,13 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Retrieve the Model from the Server
   private setModel(): void {
     this.subscriptions.push(
-      this.slideService.loadModel('KNNClassifier').subscribe(res => {
-        if(res.msg.toLowerCase() !== 'error') {
+      this.slideService.loadModel('KNNClassifier').subscribe(model => {
+        if(model.dataset) {
           this.classifier.setClassifierDataset(
-            Object.fromEntries(Model.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
+            Object.fromEntries(model.dataset.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
           );
         }
+        this.modelLoaded = true;
       })
     );
   }
@@ -157,14 +159,14 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Suggest Tag with a KNN Classifier
   tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], slideService: SlideService) => {
 
-    const mnet = await MobileNet.load();
-    this.modelLoaded = true;
+    const mobileNet = await MobileNet.load();
+    this.mobileNetLoaded = true;
 
     // When the User Creates a new Selection, we'll Classify the Snippet
     anno.on('createSelection', async function(selection: any) {
       if (classifier.getNumClasses() > 1) {
         const snippet = getSnippet(viewer, selection);
-        const activation = mnet.infer(snippet, true);
+        const activation = mobileNet.infer(snippet, true);
         const result = await classifier.predictClass(activation);
         // Inject into the Current Annotation
         if (result) {
@@ -200,7 +202,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
         const snippet = getSnippet(viewer, annotation);
-        const activation = mnet.infer(snippet, true);
+        const activation = mobileNet.infer(snippet, true);
         classifier.addExample(activation, tag.value);
         let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
         subscriptions.push(slideService.saveModel('KNNClassifier', dataset).subscribe());

@@ -5,6 +5,7 @@ import { Observable, catchError, of } from 'rxjs';
 import { FeedbackService } from '../feedback/feedback.service';
 import { Response } from '../../interfaces/response';
 import { Slide } from '../../interfaces/slide';
+import { Model } from '../../interfaces/model';
 
 @Injectable({
   providedIn: 'root'
@@ -87,10 +88,10 @@ export class SlideService {
   }
 
   // GET: Load the Model from the Server
-  loadModel(name: string): Observable<Response> {
+  loadModel(name: string): Observable<Model> {
     const url = this.slidesUrl + 'models/load/' + name;
-    return this.http.get<Response>(url).pipe(
-      catchError(this.handleError<Response>('load the model'))
+    return this.http.get<Model>(url).pipe(
+      catchError(this.handleError<Model>('load the model'))
     );
   }
 

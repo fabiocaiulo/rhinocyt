@@ -3,7 +3,6 @@ import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 
 import { SlideService } from '../../services/slide/slide.service';
-import Model from '../../../../files/KNNClassifier.json';
 
 import * as KNNClassifier from '@tensorflow-models/knn-classifier';
 import * as Tensorflow from '@tensorflow/tfjs';
@@ -20,17 +19,19 @@ interface Class {
 })
 export class InformationsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('table', { static: false }) private table: MatTable<Class>;
+  modelLoaded: boolean;
   columns: string[];
   classes: Class[];
   examples: number;
+  @ViewChild('table', { static: false }) private table: MatTable<Class>;
   private subscriptions: Subscription[];
 
   constructor(private slideService: SlideService) {
-    this.table = {} as MatTable<Class>;
+    this.modelLoaded = false;
     this.columns = ['cell', 'examples'];
     this.classes = [];
     this.examples = 0;
+    this.table = {} as MatTable<Class>;
     this.subscriptions = [];
   }
 
@@ -45,15 +46,16 @@ export class InformationsComponent implements OnInit, OnDestroy {
   // Retrieve the Model Informations from the Server
   private getModelInformations(): any {
     this.subscriptions.push(
-      this.slideService.loadModel('KNNClassifier').subscribe(res => {
-        if(res.msg.toLowerCase() !== 'error') {
-          const classifier = KNNClassifier.create();
+      this.slideService.loadModel('KNNClassifier').subscribe(model => {
+        const classifier = KNNClassifier.create();
+        if(model.dataset) {
           classifier.setClassifierDataset(
-            Object.fromEntries(Model.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
+            Object.fromEntries(model.dataset.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
           );
-          this.setClassesInformations(classifier.getClassExampleCount());
-          this.table.renderRows();
         }
+        this.setClassesInformations(classifier.getClassExampleCount());
+        this.modelLoaded = true;
+        this.table.renderRows();
       })
     );
   }

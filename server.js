@@ -24,6 +24,7 @@ app.use(cors())
 app.use(express.static(__dirname + '/dist/rhinocyt'))
 
 // Files Settings
+const getRawBody = require('raw-body')
 const fs = require('fs')
 const { promisify } = require('util')
 const unlinkAsync = promisify(fs.unlink)
@@ -150,12 +151,8 @@ app.get('/api/slides/models/load/:name', async (req, res) => {
     const destination = 'files/' + name + '.json'
     bucket.file(file).exists(async function(err, exists) {
       if(err) throw err
-      if(exists) {
-        bucket.file(file).download({ destination: destination })
-        res.status(200).send({ msg: 'Loaded' })
-      } else {
-        res.status(200).send({ msg: 'Error' })
-      }
+      if(exists) res.status(200).send({ name: name, dataset: JSON.parse(await getRawBody(bucket.file(file).createReadStream())) })
+      else res.status(200).send({ name: name, dataset: undefined })
     })
   } catch(error) {
     console.log('Load Model API: ' + error.message)
