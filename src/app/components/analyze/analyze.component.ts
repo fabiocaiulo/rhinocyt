@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { ModelService } from 'src/app/services/model/model.service';
 import { SlideService } from '../../services/slide/slide.service';
 import { Slide } from '../../interfaces/slide';
+import Model from '../../../../files/KNNClassifier.json';
 
 import OpenSeadragon from 'openseadragon';
 import * as Annotorious from '@recogito/annotorious-openseadragon';
@@ -28,7 +28,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   private classifier: any;
   private subscriptions: Subscription[];
 
-  constructor(private route: ActivatedRoute, private slideService: SlideService, private modelService: ModelService) {
+  constructor(private route: ActivatedRoute, private slideService: SlideService) {
     this.slide = {} as Slide;
     this.classifier = KNNClassifier.create();
     this.modelLoaded = false;
@@ -61,10 +61,10 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   // Retrieve the Model from the Server
   private setModel(): void {
     this.subscriptions.push(
-      this.modelService.loadModel('KNNClassifier').subscribe(model => {
-        if(model.dataset) {
+      this.slideService.loadModel('KNNClassifier').subscribe(res => {
+        if(res.msg.toLowerCase() !== 'error') {
           this.classifier.setClassifierDataset(
-            Object.fromEntries(model.dataset.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
+            Object.fromEntries(Model.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
           );
         }
       })
@@ -77,7 +77,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     const anno = Annotorious(viewer, this.getConfig());
     if(this.slide.annotations.length > 0) anno.setAnnotations(this.slide.annotations);
     this.setToolbar(anno);
-    this.tagSuggestion(this.classifier, anno, viewer, this.subscriptions, this.modelService);
+    this.tagSuggestion(this.classifier, anno, viewer, this.subscriptions, this.slideService);
     this.storeAnnotations(anno, this.subscriptions, this.slide, this.slideService);
   }
 
@@ -155,7 +155,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   }
 
   // Suggest Tag with a KNN Classifier
-  tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], modelService: ModelService) => {
+  tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], slideService: SlideService) => {
 
     const mnet = await MobileNet.load();
     this.modelLoaded = true;
@@ -203,7 +203,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
         const activation = mnet.infer(snippet, true);
         classifier.addExample(activation, tag.value);
         let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
-        subscriptions.push(modelService.saveModel('KNNClassifier', dataset).subscribe());
+        subscriptions.push(slideService.saveModel('KNNClassifier', dataset).subscribe());
       }
     }
 

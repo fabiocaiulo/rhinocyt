@@ -129,7 +129,7 @@ app.put('/api/slides/annotations', async (req, res) => {
 })
 
 // PUT: Save Model API
-app.put('/api/models/save', async (req, res) => {
+app.put('/api/slides/models/save', async (req, res) => {
   try {
     const name = req.query.name
     const destination = 'models/' + name + '.json'
@@ -143,29 +143,25 @@ app.put('/api/models/save', async (req, res) => {
 })
 
 // GET: Load Model API
-app.get('/api/models/load/:name', async (req, res) => {
+app.get('/api/slides/models/load/:name', async (req, res) => {
   try {
     const name = req.params.name
-    const destination = 'models/' + name + '.json'
-    bucket.file(destination).exists(async function(err, exists) {
+    const file = 'models/' + name + '.json'
+    const destination = 'files/' + name + '.json'
+    bucket.file(file).exists(async function(err, exists) {
       if(err) throw err
-      if(exists) loadModel(name, destination, res)
-      else res.status(200).send({ name: name, dataset: undefined })
+      if(exists) {
+        bucket.file(file).download({ destination: destination })
+        res.status(200).send({ msg: 'Loaded' })
+      } else {
+        res.status(200).send({ msg: 'Error' })
+      }
     })
   } catch(error) {
     console.log('Load Model API: ' + error.message)
     res.status(400).send({ msg: 'Error' })
   }
 })
-
-function loadModel(name, destination, res) {
-  const file = 'files/' + name + '.json'
-  bucket.file(destination).createReadStream().on('end', async function() {
-    const dataset = await readFileAsync(file)
-    await unlinkAsync(file)
-    res.status(200).send({ name: name, dataset: JSON.parse(dataset) })
-  }).pipe(fs.createWriteStream(file))
-}
 
 // App Settings
 app.get('/*', function (req, res) {

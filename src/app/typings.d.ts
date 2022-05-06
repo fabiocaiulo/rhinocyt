@@ -1,3 +1,4 @@
+declare module '*.json';
 declare module 'openseadragon';
 declare module '@recogito/annotorious-openseadragon';
 declare module '@recogito/annotorious-selector-pack';

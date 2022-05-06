@@ -78,6 +78,22 @@ export class SlideService {
     );
   }
 
+  // PUT: Save Model to the Server
+  saveModel(name: string, dataset: any): Observable<Response> {
+    const url = this.slidesUrl + 'models/save?name=' + name;
+    return this.http.put<Response>(url, dataset, this.httpOptions).pipe(
+      catchError(this.handleError<Response>('save the model'))
+    );
+  }
+
+  // GET: Load the Model from the Server
+  loadModel(name: string): Observable<Response> {
+    const url = this.slidesUrl + 'models/load/' + name;
+    return this.http.get<Response>(url).pipe(
+      catchError(this.handleError<Response>('load the model'))
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

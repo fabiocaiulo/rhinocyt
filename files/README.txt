@@ -1,1 +1,1 @@
-This folder is necessary to upload files on Firebase.
+This folder is necessary to upload and read files on Firebase.

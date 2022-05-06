@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 
-import { ModelService } from 'src/app/services/model/model.service';
+import { SlideService } from '../../services/slide/slide.service';
+import Model from '../../../../files/KNNClassifier.json';
 
 import * as KNNClassifier from '@tensorflow-models/knn-classifier';
 import * as Tensorflow from '@tensorflow/tfjs';
@@ -25,7 +26,7 @@ export class InformationsComponent implements OnInit, OnDestroy {
   examples: number;
   private subscriptions: Subscription[];
 
-  constructor(private modelService: ModelService) {
+  constructor(private slideService: SlideService) {
     this.table = {} as MatTable<Class>;
     this.columns = ['cell', 'examples'];
     this.classes = [];
@@ -44,11 +45,11 @@ export class InformationsComponent implements OnInit, OnDestroy {
   // Retrieve the Model Informations from the Server
   private getModelInformations(): any {
     this.subscriptions.push(
-      this.modelService.loadModel('KNNClassifier').subscribe(model => {
-        if(model.dataset) {
+      this.slideService.loadModel('KNNClassifier').subscribe(res => {
+        if(res.msg.toLowerCase() !== 'error') {
           const classifier = KNNClassifier.create();
           classifier.setClassifierDataset(
-            Object.fromEntries(model.dataset.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
+            Object.fromEntries(Model.map(([label, data, shape]: any)=>[label, Tensorflow.tensor(data, shape)]))
           );
           this.setClassesInformations(classifier.getClassExampleCount());
           this.table.renderRows();
