@@ -28,7 +28,6 @@ const getRawBody = require('raw-body')
 const fs = require('fs')
 const { promisify } = require('util')
 const unlinkAsync = promisify(fs.unlink)
-const readFileAsync = promisify(fs.readFile)
 
 // Multer Settings
 global.XMLHttpRequest = require('xhr2')
