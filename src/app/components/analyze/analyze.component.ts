@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { FeedbackService } from '../../services/feedback/feedback.service';
 import { SlideService } from '../../services/slide/slide.service';
 import { Slide } from '../../interfaces/slide';
 
@@ -14,6 +15,8 @@ import * as Toolbar from '@recogito/annotorious-toolbar';
 import * as MobileNet from '@tensorflow-models/mobilenet';
 import * as KNNClassifier from '@tensorflow-models/knn-classifier';
 import * as Tensorflow from '@tensorflow/tfjs';
+
+const CELLS = ['Ciliata', 'Mucipara', 'Striata', 'Basale', 'Neutrofilo', 'Eosinofilo', 'Mastcellula', 'Linfocita'];
 
 @Component({
   selector: 'app-analyze',
@@ -28,7 +31,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   private classifier: any;
   private subscriptions: Subscription[];
 
-  constructor(private route: ActivatedRoute, private slideService: SlideService) {
+  constructor(private route: ActivatedRoute, private slideService: SlideService, private feedbackService: FeedbackService) {
     this.slide = {} as Slide;
     this.classifier = KNNClassifier.create();
     this.modelLoaded = false;
@@ -79,8 +82,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     const anno = Annotorious(viewer, this.getConfig());
     if(this.slide.annotations.length > 0) anno.setAnnotations(this.slide.annotations);
     this.setToolbar(anno);
-    this.tagSuggestion(this.classifier, anno, viewer, this.subscriptions, this.slideService);
-    this.storeAnnotations(anno, this.subscriptions, this.slide, this.slideService);
+    this.tagSuggestion(this.classifier, anno, viewer, this.subscriptions, this.slide, this.slideService, this.feedbackService);
   }
 
   // Initialize Openseadragon Viewer
@@ -101,11 +103,11 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     const config = {
       formatter: this.Formatter,
       widgets: [
-        'COMMENT',
         {
           widget: 'TAG',
-          vocabulary: ['Ciliata', 'Mucipara', 'Striata', 'Basale', 'Neutrofilo', 'Eosinofilo', 'Mastcellula', 'Linfocita']
-        }
+          vocabulary: CELLS
+        },
+        'COMMENT'
       ]
     };
     return config;
@@ -135,29 +137,8 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     Toolbar(anno, <HTMLDivElement>document.getElementById('toolbar'));
   }
 
-  // Store Annotations on the Server
-  storeAnnotations = function(anno: any, subscriptions: Subscription[], slide: Slide, slideService: SlideService) {
-
-    anno.on('createAnnotation', function() {
-      store();
-    })
-
-    anno.on('updateAnnotation', function() {
-      store();
-    })
-
-    anno.on('deleteAnnotation', function() {
-      store();
-    })
-
-    function store() {
-      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
-    }
-
-  }
-
   // Suggest Tag with a KNN Classifier
-  tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], slideService: SlideService) => {
+  tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], slide: Slide, slideService: SlideService, feedbackService: FeedbackService) => {
 
     const mobileNet = await MobileNet.load();
     this.mobileNetLoaded = true;
@@ -187,26 +168,58 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
       }
     });
 
-    // When the User hits 'Ok', we'll Store the Snippet as a new Example
+    // When the User Create an Annotation, we'll Store the Snippet as a new Example
     anno.on('createAnnotation', function(annotation: any) {
-      transferLearning(annotation);
+      manageAnnotation(annotation);
     });
 
-    // When the User hits 'Ok', we'll Store the Snippet as a new Example
+    // When the User Update an Annotation, we'll Store the Snippet as a new Example
     anno.on('updateAnnotation', function(annotation: any) {
-      transferLearning(annotation);
+      manageAnnotation(annotation);
     });
 
-    // Make the Transfer Learning process
-    function transferLearning(annotation: any): void {
+    // Delete the Annotation from the Server
+    anno.on('deleteAnnotation', function() {
+      storeAnnotation();
+    })
+
+    // Manage Creating and Updating Annotation
+    function manageAnnotation(annotation: any) {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
-        const snippet = getSnippet(viewer, annotation);
-        const activation = mobileNet.infer(snippet, true);
-        classifier.addExample(activation, tag.value);
-        let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
-        subscriptions.push(slideService.saveModel('KNNClassifier', dataset).subscribe());
+        tag.value = tag?.value.charAt(0).toUpperCase() + tag?.value.slice(1).toLowerCase();
       }
+      if(checkTag(tag, annotation)) {
+        transferLearning(annotation, tag);
+        storeAnnotation();
+      }
+    }
+
+    // Make the Transfer Learning process
+    function transferLearning(annotation: any, tag: any): void {
+      const snippet = getSnippet(viewer, annotation);
+      const activation = mobileNet.infer(snippet, true);
+      classifier.addExample(activation, tag.value);
+      let dataset = JSON.stringify(Object.entries(classifier.getClassifierDataset()).map(([label, data]: any)=>[label, Array.from(data.dataSync()), data.shape]));
+      subscriptions.push(slideService.saveModel('KNNClassifier', dataset).subscribe());
+    }
+
+    // Check Tag Validity
+    function checkTag(tag: any, annotation: any): boolean {
+      let valid = true;
+      if(CELLS.indexOf(tag?.value) === -1) {
+        valid = false;
+        anno.removeAnnotation(annotation);
+        let error = 'You have to add one of these tags: ';
+        CELLS.forEach(cell => error += '"' + cell + '" ')
+        feedbackService.showFeedback(error, 'GOT IT');
+      }
+      return valid;
+    }
+
+    // Save Annotation to the Server
+    function storeAnnotation() {
+      subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
     }
 
     // Returns Rect Canvas from Annotation
