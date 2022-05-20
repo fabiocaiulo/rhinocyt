@@ -1,27 +1,9 @@
-# Rhinocyt
+# Development of a platform for cytology image analysis with the support of artificial intelligence
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.1.
+Rhinology studies the anatomy, physiology, and disorders that affect the nasal region: one of the most modern techniques for diagnose these types of affections is nasal cytology (sometimes also called rhinocytology). It involves the analysis under a microscope of the cells contained in the nasal mucosa.
 
-## Development server
+This thesis work contributes to the development of a system software to provide diagnostic support to the rhinocytology specialist, automating the process from the extraction of elements cells up to their classification and counting. In based on the numerosity of cell classes and the results history of the patient and his family members, the system proposes to the specialist some possible pathologies on the basis of algorithms known diagnostics.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Specifically, the work is focused on the design and implementation of a web platform for the classification of images of cells. In this activity, which begins at the end of the of image extraction and provides the input for the diagnostic phase, speed and accuracy in the classification. Such features are provided by the use of machine learning techniques such as neural networks.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Although one of the main issues related to machine learning in the medical field is related to the unbalancing of the dataset, progressively the system will be able to capable of recognizing and labeling up to eight different cell types. The encouraging results can be improved in the future by adopting a more precise and accurate classifier, so as to enhance its performance in the presence of particularly rare.
