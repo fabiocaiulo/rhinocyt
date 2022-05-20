@@ -16,7 +16,7 @@ import * as MobileNet from '@tensorflow-models/mobilenet';
 import * as KNNClassifier from '@tensorflow-models/knn-classifier';
 import * as Tensorflow from '@tensorflow/tfjs';
 
-const CELLS = ['Ciliata', 'Mucipara', 'Striata', 'Basale', 'Neutrofilo', 'Eosinofilo', 'Mastcellula', 'Linfocita'];
+const CELLS = ['Ciliated', 'Mucipar', 'Striated', 'Basal', 'Neutrophil', 'Eosinophil', 'Lymphocyte', 'Mastcell'];
 
 @Component({
   selector: 'app-analyze',

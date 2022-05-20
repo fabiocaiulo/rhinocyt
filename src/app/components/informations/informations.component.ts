@@ -62,14 +62,14 @@ export class InformationsComponent implements OnInit, OnDestroy {
 
   // Set Classes Informations
   private setClassesInformations(informations: any): void {
-    this.classes.push({ cell: 'Ciliata', examples: informations.Ciliata ? informations.Ciliata : 0 })
-    this.classes.push({ cell: 'Mucipara', examples: informations.Mucipara ? informations.Mucipara : 0 })
-    this.classes.push({ cell: 'Striata', examples: informations.Striata ? informations.Striata : 0 })
-    this.classes.push({ cell: 'Basale', examples: informations.Basale ? informations.Basale : 0 })
-    this.classes.push({ cell: 'Neutrofilo', examples: informations.Neutrofilo ? informations.Neutrofilo : 0 })
-    this.classes.push({ cell: 'Eosinofilo', examples: informations.Eosinofilo ? informations.Eosinofilo : 0 })
-    this.classes.push({ cell: 'Mastcellula', examples: informations.Mastcellula ? informations.Mastcellula : 0 })
-    this.classes.push({ cell: 'Linfocita', examples: informations.Linfocita ? informations.Linfocita : 0 })
+    this.classes.push({ cell: 'Ciliated', examples: informations.Ciliated ? informations.Ciliated : 0 })
+    this.classes.push({ cell: 'Mucipar', examples: informations.Mucipar ? informations.Mucipar : 0 })
+    this.classes.push({ cell: 'Striated', examples: informations.Striated ? informations.Striated : 0 })
+    this.classes.push({ cell: 'Basal', examples: informations.Basal ? informations.Basal : 0 })
+    this.classes.push({ cell: 'Neutrophil', examples: informations.Neutrophil ? informations.Neutrophil : 0 })
+    this.classes.push({ cell: 'Eosinophil', examples: informations.Eosinophil ? informations.Eosinophil : 0 })
+    this.classes.push({ cell: 'Lymphocyte', examples: informations.Lymphocyte ? informations.Lymphocyte : 0 })
+    this.classes.push({ cell: 'Mastcell', examples: informations.Mastcell ? informations.Mastcell : 0 })
     this.classes.forEach(c => this.examples += c.examples);
   }
 
