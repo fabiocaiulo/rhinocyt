@@ -1,5 +1,7 @@
 # Development of a platform for cytology image analysis with the support of artificial intelligence
 
+## Abstract
+
 Rhinology studies the anatomy, physiology, and disorders that affect the nasal region: one of the most modern techniques for diagnose these types of affections is nasal cytology (sometimes also called rhinocytology). It involves the analysis under a microscope of the cells contained in the nasal mucosa.
 
 This thesis work contributes to the realization of a system software for diagnostic support to the rhinocytology specialist, automating the process from the extraction of elements cells up to their classification and counting. In based on the numerosity of cell classes and the results history of the patient and his family members, the system proposes to the specialist some possible pathologies on the basis of algorithms known diagnostics.
