@@ -1,4 +1,4 @@
-# Development of a platform for cytology image analysis with the support of artificial intelligence
+# Development of a platform for rhinocytological image analysis with the support of artificial intelligence
 
 ## Abstract
 
