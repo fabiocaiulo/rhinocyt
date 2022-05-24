@@ -19,7 +19,7 @@ export class SlideService {
   // private slidesUrl = 'http://localhost:8080/api/slides/';
 
   // REST APIs: GET, POST, PUT, DELETE
-  httpOptions = {
+  private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 

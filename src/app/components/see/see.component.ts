@@ -77,7 +77,7 @@ export class SeeComponent implements OnInit, OnDestroy {
   }
 
   // Labels Annotorious Formatter
-  Formatter = function(annotation: any) {
+  Formatter = function(annotation: any): any {
     let result = {}
     const bodies = Array.isArray(annotation.body) ? annotation.body : [ annotation.body ];
     const firstTag = bodies.find((b: { purpose: string; }) => b.purpose == 'tagging');

@@ -31,12 +31,12 @@ export class UploadsComponent implements OnDestroy {
   }
 
   // On File Drop handler
-  onFileDropped(files: File) {
+  onFileDropped(files: File): void {
     this.prepareFilesList(files as any);
   }
 
   // Handle File from Browsing
-  fileBrowseHandler(event: Event) {
+  fileBrowseHandler(event: Event): void {
     this.prepareFilesList((event as any).target.files);
   }
 

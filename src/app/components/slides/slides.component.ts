@@ -63,14 +63,14 @@ export class SlidesComponent implements OnInit, OnDestroy {
   }
 
   // Make the Interface Responsive for Laptops
-  private makeResponsiveLaptop(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+  private makeResponsiveLaptop(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher): void {
     this.laptopQuery = media.matchMedia('(max-width: 1450px)');
     this._laptopQueryListener = () => changeDetectorRef.detectChanges();
     this.laptopQuery.addListener(this._laptopQueryListener);
   }
 
   // Make the Interface Responsive for Desktops
-  private makeResponsiveDesktop(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+  private makeResponsiveDesktop(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher): void {
     this.desktopQuery = media.matchMedia('(max-width: 1900px)');
     this._desktopQueryListener = () => changeDetectorRef.detectChanges();
     this.desktopQuery.addListener(this._desktopQueryListener);
@@ -108,7 +108,7 @@ export class SlidesComponent implements OnInit, OnDestroy {
   }
 
   // Show Confirmation Dialog
-  showDialog(id: string, index: number) {
+  showDialog(id: string, index: number): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
         title: 'Delete this slide?',
@@ -124,7 +124,7 @@ export class SlidesComponent implements OnInit, OnDestroy {
   }
 
   // Hide the Slide from Server
-  deleteSlide(id: string, index: number) {
+  deleteSlide(id: string, index: number): void {
     this.subscriptions.push(
       this.slideService.hideSlide(id).subscribe(res => {
         if(res.msg.toLowerCase() !== 'error') {

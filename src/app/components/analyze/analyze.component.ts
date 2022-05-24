@@ -114,7 +114,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   }
 
   // Labels Annotorious Formatter
-  Formatter = function(annotation: any) {
+  Formatter = function(annotation: any): any {
     let result = {}
     const bodies = Array.isArray(annotation.body) ? annotation.body : [ annotation.body ];
     const firstTag = bodies.find((b: { purpose: string; }) => b.purpose == 'tagging');
@@ -138,13 +138,13 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
   }
 
   // Suggest Tag with a KNN Classifier
-  tagSuggestion = async (classifier: any, anno: any, viewer: any, subscriptions: Subscription[], slide: Slide, slideService: SlideService, feedbackService: FeedbackService) => {
+  tagSuggestion = async(classifier: any, anno: any, viewer: any, subscriptions: Subscription[], slide: Slide, slideService: SlideService, feedbackService: FeedbackService): Promise<void> => {
 
     const mobileNet = await MobileNet.load();
     this.mobileNetLoaded = true;
 
     // When the User Creates a new Selection, we'll Classify the Snippet
-    anno.on('createSelection', async function(selection: any) {
+    anno.on('createSelection', async function(selection: any): Promise<void> {
       if (classifier.getNumClasses() > 1) {
         const snippet = getSnippet(viewer, selection);
         const activation = mobileNet.infer(snippet, true);
@@ -169,22 +169,22 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     });
 
     // When the User Create an Annotation, we'll Store the Snippet as a new Example
-    anno.on('createAnnotation', function(annotation: any) {
+    anno.on('createAnnotation', function(annotation: any): void {
       manageAnnotation(annotation);
     });
 
     // When the User Update an Annotation, we'll Store the Snippet as a new Example
-    anno.on('updateAnnotation', function(annotation: any) {
+    anno.on('updateAnnotation', function(annotation: any): void {
       manageAnnotation(annotation);
     });
 
     // Delete the Annotation from the Server
-    anno.on('deleteAnnotation', function() {
+    anno.on('deleteAnnotation', function(): void {
       storeAnnotation();
     })
 
     // Manage Creating and Updating Annotation
-    function manageAnnotation(annotation: any) {
+    function manageAnnotation(annotation: any): void {
       const tag = annotation.body.find((b: { purpose: string; }) => b.purpose === 'tagging');
       if(tag) {
         tag.value = tag?.value.charAt(0).toUpperCase() + tag?.value.slice(1).toLowerCase();
@@ -218,7 +218,7 @@ export class AnalyzeComponent implements OnInit, OnDestroy {
     }
 
     // Save Annotation to the Server
-    function storeAnnotation() {
+    function storeAnnotation(): void {
       subscriptions.push(slideService.saveAnnotations(slide.id, anno.getAnnotations()).subscribe());
     }
 

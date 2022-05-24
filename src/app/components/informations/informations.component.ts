@@ -3,14 +3,10 @@ import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 
 import { SlideService } from '../../services/slide/slide.service';
+import { Class } from '../../interfaces/class';
 
 import * as KNNClassifier from '@tensorflow-models/knn-classifier';
 import * as Tensorflow from '@tensorflow/tfjs';
-
-interface Class {
-  cell: string;
-  examples: number;
-}
 
 @Component({
   selector: 'app-informations',
