@@ -14,7 +14,7 @@ export class UploadsDirective {
   }
 
   // Dragover Listener
-  @HostListener('dragover', ['$event']) onDragOver(event: Event) {
+  @HostListener('dragover', ['$event']) public onDragOver(event: Event) {
     event.preventDefault();
     event.stopPropagation();
     this.fileOver = true;
